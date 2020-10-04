@@ -11,7 +11,7 @@ placa DS3231 reloj con sensor de temperatura
 
 
 /*   Reloj despertador con dos alarmas, sensor de temperatura y reproductor mp3
- *   creado gardav79 (davidgarant@gmail.com)
+ *   creado gardav79 (https://github.com/gardav79)
  *   04/10/2020 Versión 1.0
  *
  *   
