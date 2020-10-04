@@ -1,5 +1,6 @@
 /*   Reloj despertador con dos alarmas, sensor de temperatura y reproductor mp3
  *   creado gardav79 (davidgarant@gmail.com)
+ *   04/10/2020 Versión 1.0
  *   
  *   ------------------------------------------- Licencia / License -----------------------------------------------------------------
  *   Licencia Creative Commons  Atribución-NoComercial-CompartirIgual 
