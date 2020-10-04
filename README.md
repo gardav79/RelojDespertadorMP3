@@ -4,8 +4,11 @@ Código fuente del reloj con alarmas, sensor de temperatura y reproductor mp3 qu
 Circuitos necesarios:
 
 arduino mega 2560
+
 pantalla de 3.5" tft
+
 placa BY8001-16P reproductor mp3
+
 placa DS3231 reloj con sensor de temperatura
 
 
