@@ -1,0 +1,2 @@
+# RelojDespertadorMP3
+Código fuente del reloj con alarmas, sensor de temperatura y reproductor mp3 que he realizado para mi sobrina. Muestra Hora en formato 24h, fecha con indicación del día en texto (Lunes, Martes...), emojis que cambian según la temperatura recogida, dos alarmas con posibilidad de reproducir mp3 o una melodia, reproductor mp3 y tono de cumpleaños el día del cumpleaños de mi sobrina
