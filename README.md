@@ -1,6 +1,15 @@
 # RelojDespertadorMP3
 Código fuente del reloj con alarmas, sensor de temperatura y reproductor mp3 que he realizado para mi sobrina. Muestra Hora en formato 24h, fecha con indicación del día en texto (Lunes, Martes...), emojis que cambian según la temperatura recogida, dos alarmas con posibilidad de reproducir mp3 o una melodia, reproductor mp3 y tono de cumpleaños el día del cumpleaños de mi sobrina
 
+Circuitos necesarios:
+
+arduino mega 2560
+pantalla de 3.5" tft
+placa BY8001-16P reproductor mp3
+placa DS3231 reloj con sensor de temperatura
+
+
+
 /*   Reloj despertador con dos alarmas, sensor de temperatura y reproductor mp3
  *   creado gardav79 (davidgarant@gmail.com)
  *   
