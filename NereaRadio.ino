@@ -1,5 +1,5 @@
 /*   Reloj despertador con dos alarmas, sensor de temperatura y reproductor mp3
- *   creado gardav79 (https://github.com/gardav79)
+ *   creado gardav79 (davidgarant@gmail.com)
  *   04/10/2020 Versión 1.0
  *   
  *   ------------------------------------------- Licencia / License -----------------------------------------------------------------
@@ -110,7 +110,7 @@
 #define MORADO 0xF81E
 #define TURQUESA 0x177D
 #define AMARILLO 0xFFE0
-#define ROJO 0xF8C0
+#define  ROJO 0xF8C0
 #define NEGRO 0x0000
 #define BLANCO 0xFFFF
 #define VERDEFOSFORITO 0x07E0
@@ -203,6 +203,18 @@ static word tiempoTotal, tiempoTranscurrido, reproduccion, minutos, segundos, la
 String relojActual, horasActuales, minutosActuales, segundosActuales, fechaActual, fecha, dia, mes, anio;
 String horasS, minutosS, segundosS, fechaS;
 
+//Cadenas
+const String encendido = "Enc";
+const String apagado = "Apa";
+const String nombre = "Nerea";
+const String sonLas = ", son las";
+const String ajustarAlarma1= "AJUSTAR ALARMA 1";
+const String ajustarAlarma2 = "AJUSTAR ALARMA 2";
+const String ajustarHora= "AJUSTAR HORA";
+const String ajustarFecha = "AJUSTAR FECHA";
+const String hoyes = ", hoy es "; 
+const String de = " de ";
+
 //variables referentes a tonos y melodia cumpleaños
 int freq = 50;      // Starting frequency
 int length = 28; // the number of notes
@@ -255,7 +267,7 @@ void setup() {
   minutosActuales = relojActual.substring(3, 5); //la de minutos
   segundosActuales = relojActual.substring(6, 8); //y la de segundos
 
-  //fuerza a asignar las alarmas
+  //fuerza a asignar las alarmas si los valores de las variables son 255. 
   if (alarma1Hora == 255 | alarma1Minutos == 255 | alarma2Hora == 255 | alarma2Minutos == 255) {
     asignarAlarmas();
   }
@@ -612,7 +624,7 @@ void loop() {
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //si se pulsa aumentar, la activa
           alarma1OnOff = true;
           utftGLCD.fillRect(314, 90, 330, 104);
-          utftGLCD.print("Enc", 336, 90);
+          utftGLCD.print(encendido, 336, 90);
         }
           
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //si se pulsa disminuir, la desactiva
@@ -621,7 +633,7 @@ void loop() {
           utftGLCD.fillRect(314, 90, 330, 104);
           utftGLCD.setColor(VERDEFOSFORITO);
           utftGLCD.drawRect(314, 90, 330, 104);
-          utftGLCD.print("Apa",336, 90);
+          utftGLCD.print(apagado,336, 90);
         }
          
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente campo
@@ -749,7 +761,7 @@ void loop() {
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //si se pulsa aumentar, activa la alarma 2
           alarma2OnOff = true;
           utftGLCD.fillRect(314, 200, 330, 214);
-          utftGLCD.print("On ", 336, 200);
+          utftGLCD.print(encendido, 336, 200);
         }
           
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //si se pulsa disminuir, desactiva la alarma 2
@@ -758,7 +770,7 @@ void loop() {
           utftGLCD.fillRect(314, 200, 330, 214);
           utftGLCD.setColor(VERDEFOSFORITO);
           utftGLCD.drawRect(314, 200, 330, 214);
-          utftGLCD.print("Off", 336, 200);
+          utftGLCD.print(apagado, 336, 200);
         }
          
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente campo
@@ -976,13 +988,13 @@ void loop() {
       }
       if (alarma1TonoMp3 & tonoAlarmaReproduciendo == false) { //si el tono es la chicharra y no se está reproduciendo alarma
         while (!cancelarAlarma(1)){ //mientras no se pulse el botón cancelar alarma (le pasa la alarma a cancelar)
-          tonoAlarma(); //reproduce la alarma
+          tonoAlarma(1); //reproduce la alarma
           tonoAlarmaReproduciendo = true; //indica que está reproduciendo
         }
       } else if (!alarma1TonoMp3) { //si es tono mp3 lo que tiene que reproducir
          if(estadoReproduccion == 2) { //y se está reproduciendo mp3, tocar tono 
            while (!cancelarAlarma(1)){ //minetras no se pulse el botón cancelar alarma
-             tonoAlarma(); //reproduce la alarma
+             tonoAlarma(1); //reproduce la alarma
              tonoAlarmaReproduciendo = true; //indica que está reproduciendo
            }  
          } else { //si no se está reproduciendo mp3, lo reproduce
@@ -1017,13 +1029,13 @@ void loop() {
       }
       if (alarma2TonoMp3 & tonoAlarmaReproduciendo == false) { //si el tono es la chicharra y no se está reproduciendo alarma
         while (!cancelarAlarma(2)){ //mientras no se pulse el botón cancelar alarma (le pasa la alarma a cancelar)
-          tonoAlarma(); //reproduce el tono de alarma
+          tonoAlarma(2); //reproduce el tono de alarma
           tonoAlarmaReproduciendo = true; //indica que está reproduciendo
         }
       } else if (!alarma2TonoMp3) { //si es tono mp3 lo que tiene que reproducir
          if(estadoReproduccion == 2) { //y se está reproduciendo mp3, tocar tono 
            while (!cancelarAlarma(2)){ //mientras no se pulse el botón cancelar alarma
-             tonoAlarma(); //reproduce la alarma 
+             tonoAlarma(2); //reproduce la alarma 
              tonoAlarmaReproduciendo = true; //indica que está reproduciendo
            }  
          } else { //si no se está reproduciendo mp3, lo reproduce
@@ -1380,9 +1392,7 @@ void playNote(char note, int duration) {
 //Método para dibujar la fecha y hora en la ventana de reloj
 void dibujaAjustarFechaYhora() {
   utftGLCD.setColor(ROSA);
-  utftGLCD.setFont(BigFont);
-  String ajustarHora= "AJUSTAR HORA";
-  String ajustarFecha = "AJUSTAR FECHA";
+  utftGLCD.setFont(BigFont);  
   //Cambia el texto del título según en el objeto que se encuentre
   if (ponerEnHora >= 2) {
     utftGLCD.print(ajustarFecha, ((tamanioPantallaAncho/2)-((ajustarHora.length()*16)/2)), 40);
@@ -1407,9 +1417,7 @@ void dibujaAjustarFechaYhora() {
 //Método para dibujar la ventana de ajuste de alarmas
 void dibujaAjustarAlarmas() {
   utftGLCD.setColor(ROSA);
-  utftGLCD.setFont(BigFont);
-  String ajustarAlarma1= "AJUSTAR ALARMA 1";
-  String ajustarAlarma2 = "AJUSTAR ALARMA 2";
+  utftGLCD.setFont(BigFont);  
   //Cambia el texto del título según en el objeto que se encuentre
   if (ponerAlarma <= 3) {
     utftGLCD.print(ajustarAlarma1, ((tamanioPantallaAncho/2)-((ajustarAlarma2.length()*16)/2)), 40);
@@ -1431,13 +1439,13 @@ void dibujaAjustarAlarmas() {
   //iconos y texto alarma 1
   if (alarma1OnOff) {
     utftGLCD.fillRect(314, 90, 330, 104);
-    utftGLCD.print("On ", 336, 90);
+    utftGLCD.print(encendido, 336, 90);
   } else {
     utftGLCD.setColor(NEGRO);
     utftGLCD.fillRect(314, 90, 330, 104);
     utftGLCD.setColor(VERDEFOSFORITO);
     utftGLCD.drawRect(314, 90, 330, 104);
-    utftGLCD.print("Off",336, 90);
+    utftGLCD.print(apagado,336, 90);
   }
   utftGLCD.drawBitmap(314,115,24,24, chicharra_24px);
   utftGLCD.print("/", 340, 121);
@@ -1450,13 +1458,13 @@ void dibujaAjustarAlarmas() {
   //iconos y texto alarma 2
   if (alarma2OnOff) {
     utftGLCD.fillRect(314, 200, 330, 214);
-    utftGLCD.print("On ", 336, 200);
+    utftGLCD.print(encendido, 336, 200);
   } else {
     utftGLCD.setColor(NEGRO);
     utftGLCD.fillRect(314, 200, 330, 214);
     utftGLCD.setColor(VERDEFOSFORITO);
     utftGLCD.drawRect(314, 200, 330, 214);
-    utftGLCD.print("Off",336, 200);
+    utftGLCD.print(apagado,336, 200);
   }
   utftGLCD.drawBitmap(314,225,24,24, chicharra_24px);
   utftGLCD.print("/", 340, 231);
@@ -1548,21 +1556,18 @@ void dibujaFecha() {
   //COORDENADAS CONSTANTES X HORIZONTAL Y VERTICAL
   const int ejexlinea1 = 40;
   const int ejeylinea1 = 260;
-  const int ejeylinea2 = 280;
-  String nerea = "Nerea";
-  String hoyes = ", hoy es "; 
-  String de = " de ";
+  const int ejeylinea2 = 280;  
   String mestexto = rtc.getMonthStr(FORMAT_LONG);
   
   utftGLCD.setColor(ROSA);
   utftGLCD.setFont(BigFont);
   utftGLCD.setBackColor(NEGRO);
-  utftGLCD.print(nerea, ejexlinea1, ejeylinea1);
+  utftGLCD.print(nombre, ejexlinea1, ejeylinea1);
   utftGLCD.setColor(AMARILLO);
   utftGLCD.setBackColor(NEGRO); 
   int sumhoyes = hoyes.length()*16;
-  utftGLCD.print(hoyes,ejexlinea1+(nerea.length()*16),ejeylinea1);
-  utftGLCD.print(rtc.getDOWStr(FORMAT_LONG), ejexlinea1+(nerea.length()*16)+2+(hoyes.length()*16)+2, ejeylinea1);             
+  utftGLCD.print(hoyes,ejexlinea1+(nombre.length()*16),ejeylinea1);
+  utftGLCD.print(rtc.getDOWStr(FORMAT_LONG), ejexlinea1+(nombre.length()*16)+2+(hoyes.length()*16)+2, ejeylinea1);             
   utftGLCD.print(dia, ejexlinea1, ejeylinea2);          
   utftGLCD.print(de, ejexlinea1+((dia.length()*16)+2),ejeylinea2);
   utftGLCD.print("                      ", ejexlinea1+((dia.length()*16)+2+(de.length()*16)+2),ejeylinea2);
@@ -1688,15 +1693,16 @@ void saludo() {
   utftGLCD.setColor(MORADO);
   utftGLCD.print("N", 220, 120); 
   delay(1500);
-  utftGLCD.setColor(AMARILLO);
-  utftGLCD.setFont(Various_Symbols_32x32);
-  utftGLCD.print("L", 348, 128);
+  utftGLCD.setColor(AMARILLO);  
+  utftGLCD.setFont(Various_Symbols_32x32); 
+  utftGLCD.print("L", 348, 130); //Dibuja emoji sonriendo
   delay(3000);
   utftGLCD.clrScr();
 }
 
 //Tono de alarma para el buzzer
-void tonoAlarma() {  
+void tonoAlarma(byte alarma) {  
+  while (!cancelarAlarma(alarma)){
   tone(PINCHICHARRA, 4000,2000); // Send 1KHz sound signal...
   delay(100);
   tone(PINCHICHARRA, 4000,2000);
@@ -1713,6 +1719,7 @@ void tonoAlarma() {
   delay(1000);        // ...for 1 sec
   noTone(PINCHICHARRA);     // Stop sound...
   delay(1000);        // ...for 1sec  
+  }
 }
 
 //Clase hija para obtener la parte decimal de la temperatura
