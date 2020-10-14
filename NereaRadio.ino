@@ -420,8 +420,7 @@ void loop() {
           ponerEnHora=2;
         }
 
-        //compruebaBotonCancelar(0); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        compruebaBotonCancelar(0, ventanaAlaQueVolver);
+        compruebaBotonCancelar(0, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
         
       break; //fin caso 1
       
@@ -455,8 +454,7 @@ void loop() {
           ponerEnHora=3;
         }
 
-        //compruebaBotonCancelar(0); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        compruebaBotonCancelar(0, ventanaAlaQueVolver);
+        compruebaBotonCancelar(0, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
         
       break; //fin caso 2
       
@@ -482,8 +480,7 @@ void loop() {
           ponerEnHora=4;
         }
 
-        //compruebaBotonCancelar(0); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        compruebaBotonCancelar(0, ventanaAlaQueVolver);
+        compruebaBotonCancelar(0, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
         
        break; //fin caso 3
        
@@ -525,8 +522,7 @@ void loop() {
           }
         }
 
-        //compruebaBotonCancelar(0); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        compruebaBotonCancelar(0, ventanaAlaQueVolver);
+        compruebaBotonCancelar(0, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
         
        break; //fin caso 4
      
@@ -577,8 +573,7 @@ void loop() {
           ponerAlarma = 1;
         }
 
-        //compruebaBotonCancelar(1); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        compruebaBotonCancelar(1, ventanaAlaQueVolver);
+        compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
         
       break; //fin caso 0
       
@@ -613,8 +608,7 @@ void loop() {
           ponerAlarma=2;
         }
 
-        //compruebaBotonCancelar(1); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        compruebaBotonCancelar(1, ventanaAlaQueVolver);
+        compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
 
       break; //fin caso 1
 
@@ -645,8 +639,7 @@ void loop() {
           ponerAlarma=3;
         }
 
-        //compruebaBotonCancelar(1); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        compruebaBotonCancelar(1, ventanaAlaQueVolver);
+        compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
 
       break; //fin caso 2
       
@@ -680,8 +673,7 @@ void loop() {
           ponerAlarma=4;
         }
 
-        //compruebaBotonCancelar(1); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        compruebaBotonCancelar(1, ventanaAlaQueVolver);
+        compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
 
       break; //fin caso 3
       
@@ -720,8 +712,7 @@ void loop() {
           ponerAlarma = 5;
         }
 
-        //compruebaBotonCancelar(1); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        compruebaBotonCancelar(1, ventanaAlaQueVolver);
+        compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
 
       break;
       
@@ -756,8 +747,7 @@ void loop() {
           ponerAlarma=6;
         }
 
-        //compruebaBotonCancelar(1); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        compruebaBotonCancelar(1, ventanaAlaQueVolver);
+        compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
       
       break; //fin caso 5
       
@@ -787,8 +777,7 @@ void loop() {
           ponerAlarma=7;
         }
 
-        //compruebaBotonCancelar(1); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        compruebaBotonCancelar(1, ventanaAlaQueVolver);
+        compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
 
       break; //fin caso 6
             
@@ -823,8 +812,7 @@ void loop() {
           dibujarPantallaInicio();
         }
 
-        //compruebaBotonCancelar(1); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        compruebaBotonCancelar(1, ventanaAlaQueVolver);
+        compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
 
       break; //fin caso 6
       
