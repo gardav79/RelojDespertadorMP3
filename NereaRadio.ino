@@ -14,7 +14,7 @@
  *   ------------------------------------------- Licencia / License -----------------------------------------------------------------
  *   Licencia Creative Commons  Atribución-NoComercial-CompartirIgual 
  *   https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es
- *   License Creative Commons (CC BY-NC-SA 3.0))   
+ *   License Creative Commons (CC BY-NC-SA 4.0))   
  *   https://creativecommons.org/licenses/by-nc-sa/4.0
  *   
  *   ------------------------------------------- Idea original ----------------------------------------------------------------------
