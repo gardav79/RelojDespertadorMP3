@@ -385,7 +385,6 @@ void loop() {
           ponerEnHora = 1;
         }
 
-        //compruebaBotonCancelar(0); //si se pulsa cancelar, vuelve a la pantalla de inicio
         compruebaBotonCancelar(0, ventanaAlaQueVolver);
         
       break; //fin caso 0
