@@ -1,4 +1,4 @@
-
+******** Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International *********
 
 Creative Commons Corporation ("Creative Commons") no es una firma de abogados ni ofrece servicios legales ni asesoría legal. La distribución de las licencias públicas de Creative Commons no genera una relación abogado-cliente ni de cualquier otro tipo. Creative Commons proporciona sus licencias y la información relacionada tal como se presenta. Creative Commons no ofrece ninguna garantía con respecto a sus licencias, ni sobre el material sujeto a sus términos y condiciones, ni sobre cualquier información relacionada. Creative Commons queda exenta de cualquier responsabilidad vinculada a daños que resulten de su uso conforme al marco legal aplicable.
 
