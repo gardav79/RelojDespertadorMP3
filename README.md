@@ -3,14 +3,20 @@
 Reloj despertador con dos alarmas, sensor de temperatura y reproductor mp3
 creado por gardav79 (davidgarant@gmail.com)
 
-------------------------------------------- Licencia / License -----------------------------------------------------------------
-Licencia Creative Commons  Atribución-NoComercial-CompartirIgual 
+------------------------------------------- Licencia / License --------------------------------------------------------------
+
+Licencia Creative Commons  Atribución-NoComercial-CompartirIgual
+
 https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es_ES
-License Creative Commons (CC BY-NC-SA 3.0))   
+
+License Creative Commons (CC BY-NC-SA 3.0))
+
 https://creativecommons.org/licenses/by-nc-sa/4.0
  
 ---- Enlaces ----------------------------------------------------------------------------------------------------------------
+
 Enlace a github: https://github.com/gardav79/RelojDespertadorMP3
+
 Enlace a los STL en thinkgiverse: https://www.thingiverse.com/thing:4627107
     
 ---- Versiones --------------------------------------------------------------------------------------------------------------
