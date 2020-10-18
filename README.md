@@ -1,24 +1,32 @@
 # RelojDespertadorMP3
-Código fuente del reloj con alarmas, sensor de temperatura y reproductor mp3 que he realizado para mi sobrina. Muestra Hora en formato 24h, fecha con indicación del día en texto (Lunes, Martes...), emojis que cambian según la temperatura recogida, dos alarmas con posibilidad de reproducir mp3 o una melodia, reproductor mp3 y tono de cumpleaños el día del cumpleaños de mi sobrina
-
-Circuitos necesarios:
-
-arduino mega 2560
-pantalla de 3.5" tft
-placa BY8001-16P reproductor mp3
-placa DS3231 reloj con sensor de temperatura
-
-
-
 /*   Reloj despertador con dos alarmas, sensor de temperatura y reproductor mp3
- *   creado gardav79 (https://github.com/gardav79)
- *   04/10/2020 Versión 1.0
- *
+ *   creado por gardav79 (davidgarant@gmail.com)
+ *   
+ *   18/10/2020 Versión 1.2
+ *   
+ *   **** Cambios introducidos v1.2 *******************
+ *   
+ *   · Creación de 2 arrays para indicar en el título de los ajustes de hora y fecha y alarmas el campo 
+ *     que se está editando
+ *   · Al mostrar la cadena "ano" muestra una línea encima de la "n" para simular una "ñ" (una virgulilla (~))
+ *   
+ *   
+ *   13/10/2020 Versión 1.1
+ *   
+ *   **** Cambios introducidos v1.1 *******************
+ *   
+ *   · Posibilidad de ajustar la alarma y el reloj desde la pantalla del reproductor
+ *   · Cambia canción automáticamente en caso de no estar en la ventana del reproductor
+ *   · Se puede cambiar entre canciones y parar la reproducción en la ventana principal
+ *   · Se puede cambiar el modo de reproducción y el ecualizador en la ventana principal
+ *   · Optimización de parte del código
+ * 
+ *   04/10/2020 Versión 1.0       
+ *   
  *   
  *   ------------------------------------------- Licencia / License -----------------------------------------------------------------
  *   Licencia Creative Commons  Atribución-NoComercial-CompartirIgual 
- *   https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es
- *   License Creative Commons (CC BY-NC-SA 4.0))   
+ *   License Creative Commons (CC BY-NC-SA 3.0))   
  *   https://creativecommons.org/licenses/by-nc-sa/4.0
  *   
  *   ------------------------------------------- Idea original ----------------------------------------------------------------------
@@ -31,7 +39,8 @@ placa DS3231 reloj con sensor de temperatura
  *   ------------------------------------------- Resumen y explicación breve del código --------------------------------------------
  *   
  *   La idea original está realizada con una pantalla de 3.2" táctil y una única alarma. Partiendo de esa idea, he sustituido la 
- *   pantalla de 3.2" táctil por una pantalla de 3.5" sin táctil y 12 botones físicos para realizar las funciones necesarias.
+ *   pantalla de 3.2" táctil por una pantalla de 3.5" sin táctil (480x320px, ILI9486, 16bits) y 12 botones físicos para realizar 
+ *   las funciones necesarias.
  *   
  *   Al encender, muestra un mensaje de bienvenida a "Nerea" (mi sobrina, que para ella lo hice). La placa DS3231 tiene la 
  *   posibilidad de guardar la fecha y hora con una pila de botón CR2032. El programa comprueba la fecha que la placa DS3231
@@ -56,7 +65,7 @@ placa DS3231 reloj con sensor de temperatura
  *   ---------------------------------------------- Modificación en la librería DS3231 -----------------------------------------------
  *   
  *   Para poder controlar que los días son los de un mes concreto (meses de 30, que no se pueda poner 31 por ejemplo) he modificado la 
- *   libería DS3231 incluyendo tre métodos que se encargan de realizar esa comprobación. Esos métodos son 
+ *   libería DS3231 incluyendo tres métodos que se encargan de realizar esa comprobación. Esos métodos son:
  *   
  *   bool bisiesto(unsigned int year); //para conocer si un año es bisiesto
  *   char  dias_mes(char mes, char ano, char siglo);
@@ -84,6 +93,7 @@ placa DS3231 reloj con sensor de temperatura
  *   Libreria UTFT: http://www.rinkydinkelectronics.com/library.php?id=51
  *   Libreria DS3231: http://www.rinkydinkelectronics.com/library.php?id=73
  *   Fuentes tipográficas usadas: http://www.rinkydinkelectronics.com/r_fonts.php
+ * 
  *   
  *   -------------------------------------------- Método para obtener las décimas en la temperatura ----------------------------------
  *   
@@ -104,3 +114,15 @@ placa DS3231 reloj con sensor de temperatura
  *   El tono de alarma está basado en el código siguiente: https://www.ardumotive.com/how-to-use-a-buzzer-en.html
  *   
  *   En el que que se explica como usar hacer que suenen diferentes frecuencias a través de la chicharra
+ *   
+ *   -------------------------------------------- Material necesario -----------------------------------------------------------------
+ *   
+ *   -. Arduino mega 2560 o similar
+ *   -. Pantalla de 3.5" TFT (480x320px), controladora ILI9486, 16bits
+ *   -. Placa BY8001-16P mp3 o similar
+ *   -. Placa DS3231 reloj y temperatura
+ *   -. Pila de botón CR2032 para la placa DS3231
+ *   -. 12 pulsadores
+ *   -. 12 resistencias de 10k 
+ * 
+ */
