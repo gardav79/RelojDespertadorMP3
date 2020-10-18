@@ -1,7 +1,7 @@
 # RelojDespertadorMP3
 
 Reloj despertador con dos alarmas, sensor de temperatura y reproductor mp3
-creado por gardav79 (davidgarant@gmail.com)
+creado por gardav79
 
 ------------------------------------------- Licencia / License --------------------------------------------------------------
 
