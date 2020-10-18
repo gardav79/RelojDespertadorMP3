@@ -127,9 +127,15 @@ En el que que se explica como usar hacer que suenen diferentes frecuencias a tra
 -------------------------------------------- Material necesario -----------------------------------------------------------------
    
   -. Arduino mega 2560 o similar
+  
   -. Pantalla de 3.5" TFT (480x320px), controladora ILI9486, 16bits
+  
   -. Placa BY8001-16P mp3 o similar
+  
   -. Placa DS3231 reloj y temperatura
+  
   -. Pila de botón CR2032 para la placa DS3231
+  
   -. 12 pulsadores
+  
   -. 12 resistencias de 10k
