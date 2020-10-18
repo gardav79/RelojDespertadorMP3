@@ -1,9 +1,15 @@
 # RelojDespertadorMP3
- *   Reloj despertador con dos alarmas, sensor de temperatura y reproductor mp3
+*   Reloj despertador con dos alarmas, sensor de temperatura y reproductor mp3
  *   creado por gardav79 (davidgarant@gmail.com)
- *   
+ 
+ * ---- Enlaces ----------------------------------------------------------------------------------------------------------------
+ *   Enlace a github: https://github.com/gardav79/RelojDespertadorMP3
+ *   Enlace a los STL en thinkgiverse: https://www.thingiverse.com/thing:4627107
+    
+*    ---- Versiones --------------------------------------------------------------------------------------------------------------
+ 
  *   18/10/2020 Versión 1.2
- *   
+    
  *   **** Cambios introducidos v1.2 *******************
  *   
  *   · Creación de 2 arrays para indicar en el título de los ajustes de hora y fecha y alarmas el campo 
