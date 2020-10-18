@@ -1,5 +1,15 @@
 /*   Reloj despertador con dos alarmas, sensor de temperatura y reproductor mp3
- *   creado gardav79 (davidgarant@gmail.com)
+ *   creado por gardav79 (davidgarant@gmail.com)
+ *   
+ *   18/10/2020 Versión 1.2
+ *   
+ *   **** Cambios introducidos v1.2 *******************
+ *   
+ *   · Creación de 2 arrays para indicar en el título de los ajustes de hora y fecha y alarmas el campo 
+ *     que se está editando
+ *   · Al mostrar la cadena "ano" muestra una línea encima de la "n" para simular una "ñ" (una virgulilla (~))
+ *   
+ *   
  *   13/10/2020 Versión 1.1
  *   
  *   **** Cambios introducidos v1.1 *******************
@@ -10,11 +20,12 @@
  *   · Se puede cambiar el modo de reproducción y el ecualizador en la ventana principal
  *   · Optimización de parte del código
  * 
+ *   04/10/2020 Versión 1.0       
+ *   
  *   
  *   ------------------------------------------- Licencia / License -----------------------------------------------------------------
  *   Licencia Creative Commons  Atribución-NoComercial-CompartirIgual 
- *   https://creativecommons.org/licenses/by-nc-sa/4.0/deed.es
- *   License Creative Commons (CC BY-NC-SA 4.0))   
+ *   License Creative Commons (CC BY-NC-SA 3.0))   
  *   https://creativecommons.org/licenses/by-nc-sa/4.0
  *   
  *   ------------------------------------------- Idea original ----------------------------------------------------------------------
@@ -27,7 +38,8 @@
  *   ------------------------------------------- Resumen y explicación breve del código --------------------------------------------
  *   
  *   La idea original está realizada con una pantalla de 3.2" táctil y una única alarma. Partiendo de esa idea, he sustituido la 
- *   pantalla de 3.2" táctil por una pantalla de 3.5" sin táctil y 12 botones físicos para realizar las funciones necesarias.
+ *   pantalla de 3.2" táctil por una pantalla de 3.5" sin táctil (480x320px, ILI9486, 16bits) y 12 botones físicos para realizar 
+ *   las funciones necesarias.
  *   
  *   Al encender, muestra un mensaje de bienvenida a "Nerea" (mi sobrina, que para ella lo hice). La placa DS3231 tiene la 
  *   posibilidad de guardar la fecha y hora con una pila de botón CR2032. El programa comprueba la fecha que la placa DS3231
@@ -52,7 +64,7 @@
  *   ---------------------------------------------- Modificación en la librería DS3231 -----------------------------------------------
  *   
  *   Para poder controlar que los días son los de un mes concreto (meses de 30, que no se pueda poner 31 por ejemplo) he modificado la 
- *   libería DS3231 incluyendo tre métodos que se encargan de realizar esa comprobación. Esos métodos son 
+ *   libería DS3231 incluyendo tres métodos que se encargan de realizar esa comprobación. Esos métodos son:
  *   
  *   bool bisiesto(unsigned int year); //para conocer si un año es bisiesto
  *   char  dias_mes(char mes, char ano, char siglo);
@@ -80,6 +92,7 @@
  *   Libreria UTFT: http://www.rinkydinkelectronics.com/library.php?id=51
  *   Libreria DS3231: http://www.rinkydinkelectronics.com/library.php?id=73
  *   Fuentes tipográficas usadas: http://www.rinkydinkelectronics.com/r_fonts.php
+ * 
  *   
  *   -------------------------------------------- Método para obtener las décimas en la temperatura ----------------------------------
  *   
@@ -101,6 +114,15 @@
  *   
  *   En el que que se explica como usar hacer que suenen diferentes frecuencias a través de la chicharra
  *   
+ *   -------------------------------------------- Material necesario -----------------------------------------------------------------
+ *   
+ *   -. Arduino mega 2560 o similar
+ *   -. Pantalla de 3.5" TFT (480x320px), controladora ILI9486, 16bits
+ *   -. Placa BY8001-16P mp3 o similar
+ *   -. Placa DS3231 reloj y temperatura
+ *   -. Pila de botón CR2032 para la placa DS3231
+ *   -. 12 pulsadores
+ *   -. 12 resistencias de 10k 
  *   
  *   
  *  
@@ -155,7 +177,7 @@ extern uint8_t Various_Symbols_32x32[]; //Símbolos de reproducción, volumen, e
 
 //definición de los iconos
 //emojis
-extern unsigned short agustico_24px[]; //
+extern unsigned short agustico_24px[]; 
 extern unsigned short calor_24px[];
 extern unsigned short frio_24px[];
 extern unsigned short fresquito_24px[];
@@ -221,14 +243,25 @@ const String encendido = "Encend.";
 const String apagado = "Apagada";
 const String nombre = "Nerea";
 const String sonLas = ", son las";
-const String ajustarAlarma1= "AJUSTAR ALARMA 1";
-const String ajustarAlarma2 = "AJUSTAR ALARMA 2";
-const String ajustarHora= "AJUSTAR HORA";
-const String ajustarFecha = "AJUSTAR FECHA";
+// 0 HORA ALARMA1/ 1 MINUTOS ALARMA1/ 2 ONOFF ALARMA1/ 3 TONO ALARMA 1
+// 4 HORA ALARMA2/ 5 MINUTOS ALARMA2/ 6 ONOFF ALARMA2/ 7 TONO ALARMA 2
+const String ajustarAlarmasArray[] = {
+  "AJUSTAR HORA ALARMA 1   ", "AJUSTAR MINUTOS ALARMA 1", 
+  "AJUSTAR ALARMA 1        ", "AJUSTAR TONO ALARMA 1   ",
+  "AJUSTAR HORA ALARMA 2   ", "AJUSTAR MINUTOS ALARMA 2", 
+  "AJUSTAR ALARMA 2        ", "AJUSTAR TONO ALARMA 2   ",
+};
+const String ajustarHoraArray[] = { // O HORA/ 1 MINUTOS/ 2 MES/ 3 AÑO/ 4 DIA
+	"AJUSTAR HORA   ", "AJUSTAR MINUTOS", "AJUSTAR MES    ", 
+	"AJUSTAR ANO     ", "AJUSTAR DIA     "
+};
 const String hoyes = ", hoy es "; 
 const String de = " de ";
-const String modoEcualizacion[] = {"Normal ", "Pop    ", "Rock   ", "Jazz   ", "Classic", "Bass   "};
-const String modoReproduccion[] = {"Todas      ", "Carpeta    ", "Repetir    ", "Aleatorio  ", "Desactivado"};
+const String modoEcualizacion[] = {"Normal ", "Pop    ", "Rock   ", 
+	                                 "Jazz   ", "Clasica", "Bass   "};
+const String modoReproduccion[] = {"Todas      ", "Carpeta    ", 
+	                                 "Repetir    ", "Aleatorio  ", 
+	                                 "Desactivado"};
 
 //variables referentes a tonos, melodia y fecha cumpleaños
 int freq = 50;      // Starting frequency
@@ -269,12 +302,12 @@ void setup() {
   leerAlarmas(); //lee las alarmas de la EEPROM 
 
   //Inicializa el mp3
-  Serial.begin(9600);  // asinga el ratio en baudios al monitor serie
+  Serial.begin(9600);  // asigna el ratio en baudios al monitor serie
   mp3Serial.begin(9600);  // BY8001 set to 9600 baud (required)
   mp3.setup(mp3Serial); // tell BY8001 library which serial port to use.
   delay(800);  // allow time for BY8001 cold boot; may adjust depending on flash storage size
 
-  obtenerFechaActual(); //lama al método para obtener la fecha actual
+  obtenerFechaActual(); //llama al método para obtener la fecha actual
   saludo(); //Lanza el saludo de bienvenida (siempre cuando se enciende)
   dibujarPantallaInicio(); //dibuja la pantalla de inicio
   
@@ -386,6 +419,7 @@ void loop() {
           ponerEnHora = 1;
         }
 
+        //compruebaBotonCancelar(0); //si se pulsa cancelar, vuelve a la pantalla de inicio
         compruebaBotonCancelar(0, ventanaAlaQueVolver);
         
       break; //fin caso 0
@@ -1410,10 +1444,15 @@ void dibujaAjustarFechaYhora() {
   utftGLCD.setColor(ROSA);
   utftGLCD.setFont(BigFont);  
   //Cambia el texto del título según en el objeto que se encuentre
-  if (ponerEnHora >= 2) {
-    utftGLCD.print(ajustarFecha, ((tamanioPantallaAncho/2)-((ajustarHora.length()*16)/2)), 40);
+  // O HORA/ 1 MINUTOS/ 2 MES/ 3 AÑO/ 4 DIA
+  utftGLCD.print(ajustarHoraArray[ponerEnHora], ((tamanioPantallaAncho/2)-((ajustarHoraArray[ponerEnHora].length()*16)/2)), 40);
+  //Para dibujar la virgulilla (~) de la ñ en la n de la cadena "ano"
+  if (ponerEnHora == 3) {
+    utftGLCD.setColor(ROSA);
+    utftGLCD.drawLine(medio+100,38, medio+106, 39);
   } else {
-    utftGLCD.print(ajustarHora, ((tamanioPantallaAncho/2)-((ajustarHora.length()*16)/2)), 40);
+    utftGLCD.setColor(NEGRO);
+    utftGLCD.drawLine(medio+100,38, medio+106, 39);
   }
   utftGLCD.setColor(VERDEFOSFORITO);
   utftGLCD.setFont(SixteenSegment48x72Num);
@@ -1435,11 +1474,9 @@ void dibujaAjustarAlarmas() {
   utftGLCD.setColor(ROSA);
   utftGLCD.setFont(BigFont);  
   //Cambia el texto del título según en el objeto que se encuentre
-  if (ponerAlarma <= 3) {
-    utftGLCD.print(ajustarAlarma1, ((tamanioPantallaAncho/2)-((ajustarAlarma2.length()*16)/2)), 40);
-  } else {
-    utftGLCD.print(ajustarAlarma2, ((tamanioPantallaAncho/2)-((ajustarAlarma2.length()*16)/2)), 40);
-  }
+  // 0 HORA ALARMA1/ 1 MINUTOS ALARMA1/ 2 ONOFF ALARMA1/ 3 TONO ALARMA 1
+  // 4 HORA ALARMA2/ 5 MINUTOS ALARMA2/ 6 ONOFF ALARMA2/ 7 TONO ALARMA 2
+  utftGLCD.print(ajustarAlarmasArray[ponerAlarma], ((tamanioPantallaAncho/2)-((ajustarAlarmasArray[ponerAlarma].length()*16)/2)), 40);
   utftGLCD.setColor(VERDEFOSFORITO);
   utftGLCD.setFont(SixteenSegment48x72Num);
   //digitos alarma 1
