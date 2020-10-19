@@ -11,7 +11,7 @@
  *   
  *   **** Cambios introducidos v1.3 *******************
  *   
- *   · Relectura del valor tiempototal en el reproductor mp3 por un error en el pintal de la barra de progreso de mp3, 
+ *   · Relectura del valor tiempoTotal en el reproductor mp3 por un error en el pintal de la barra de progreso de mp3, 
  *     que en modo aleatorio no pintaba correctamente
  *   · Cambio en el tono de la chicharra, buscando un tono más corto y algo más grave
  *   
