@@ -944,7 +944,7 @@ void siguienteCancion() {
   tiempoTotal = mp3.getTotalTrackPlaybackTime();  
   delay(10);
   //Si la canción llega a fin, dibuja la barra a 0 y lanza la siguiente canción
-  if (tiempoTranscurrido == 0 || tiempoTranscurrido == tiempoTotal || tiempoTranscurrido > tiempoTotal) {
+  if (tiempoTranscurrido == tiempoTotal || tiempoTranscurrido > tiempoTotal) {
     if (ventana == 3) {
       drawTrackBar();
     }
