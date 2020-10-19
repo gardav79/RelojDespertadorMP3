@@ -7,6 +7,14 @@
  *   
  *   ---- Versiones --------------------------------------------------------------------------------------------------------------
  *   
+ *   19/10/2020 Versión 1.3
+ *   
+ *   **** Cambios introducidos v1.3 *******************
+ *   
+ *   · Relectura del valor tiempototal en el reproductor mp3 por un error en el pintal de la barra de progreso de mp3, 
+ *     que en modo aleatorio no pintaba correctamente
+ *   · Cambio en el tono de la chicharra, buscando un tono más corto y algo más grave
+ *   
  *   18/10/2020 Versión 1.2
  *   
  *   **** Cambios introducidos v1.2 *******************
@@ -329,7 +337,6 @@ void setup() {
 }
 
 void loop() {
-  
   // La ventana 0 es la ventana del reloj, en el que muestra el reloj en grande en el centro, la fecha completa y la temperatura
   if (ventana == 0) {
     leerAlarmas(); //lee las alarmas de la EEPROM
@@ -375,7 +382,7 @@ void loop() {
     botonesComunes(); //método que contiene el control de los botones comunes en todas las ventanas
     if (estadoReproduccion == 2) { //si está reproduciendo y se acaba la canción, pasa a la siguiente
     siguienteCancion();
-    }      
+    }       
   }//fin ventana 0 
 
   //La ventana 1, es la ventana de ajuste de fecha y hora 
@@ -393,41 +400,33 @@ void loop() {
     switch (ponerEnHora) {      
       case 0: //el caso 0 ajusta la hora
         utftGLCD.setColor(ROSA); 
-        utftGLCD.drawRoundRect(67,78,118+50,153);
+        utftGLCD.drawRoundRect(67,78,168,153);
         utftGLCD.setColor(VERDEFOSFORITO);
         utftGLCD.setFont(SixteenSegment48x72Num);
         utftGLCD.printNumI(digitosHora, 70,80,2,'0');
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //si se pulsa aumentar, sube una hora
           digitosHora++;
           utftGLCD.setColor(ROSA);
-          utftGLCD.drawRoundRect(67,78,118+50,153);
+          utftGLCD.drawRoundRect(67,78,168,153);
         } 
-        
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //si se pulsa disminuir, baja una hora
           digitosHora--;
           utftGLCD.setColor(ROSA);
-          utftGLCD.drawRoundRect(67,78,118+50,153);
+          utftGLCD.drawRoundRect(67,78,168,153);
         }
-
         if (digitosHora == 24) { //cambia las 24h a 00
           digitosHora = 00;
         }
-
         if (digitosHora == 255) { //si el digito es 255 (valor máximo de la variable) lo cambia a 23
           digitosHora = 23;
         }
-        
         utftGLCD.printNumI(digitosHora, 70,80,2,'0');          
-        
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente digito
           utftGLCD.setColor(NEGRO);
-          utftGLCD.drawRoundRect(67,78,118+50,153); 
+          utftGLCD.drawRoundRect(67,78,168,153); 
           ponerEnHora = 1;
         }
-
-        //compruebaBotonCancelar(0); //si se pulsa cancelar, vuelve a la pantalla de inicio
         compruebaBotonCancelar(0, ventanaAlaQueVolver);
-        
       break; //fin caso 0
 
       case 1: //el caso 1 ajusta los minutos
@@ -439,89 +438,70 @@ void loop() {
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //si se pulsa aumentar, aumenta un minuto
           digitosMinutos++;
         }
-
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //si se pulsa cancelar, disminuye un minuto
           digitosMinutos--;
         }
-         
         if (digitosMinutos == 60) { //si los minutos llegan a 60, cambia a 00
           digitosMinutos = 00;
         }
-
         if (digitosMinutos == 255) { //si el valor es 255, lo cambia a 59
           digitosMinutos = 59;
         }
-          
         utftGLCD.printNumI(digitosMinutos, 186,80,2,'0');          
-        
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente digito
           utftGLCD.setColor(NEGRO);
           utftGLCD.drawRoundRect(184,78,285,153);   
           ponerEnHora=2;
         }
-
         compruebaBotonCancelar(0, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        
       break; //fin caso 1
       
       case 2: //el caso 2 ajusta el mes
         utftGLCD.setColor(ROSA);
-        utftGLCD.drawRect(medio+34+17,159,medio+34+17+33,176);
+        utftGLCD.drawRect(medio+51,159,medio+84,176);
         utftGLCD.setColor(VERDEFOSFORITO);
         utftGLCD.setFont(BigFont);
-        utftGLCD.printNumI(digitosMes, medio+34+18, 160, 2, '0');
+        utftGLCD.printNumI(digitosMes, medio+52, 160, 2, '0');
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //aumenta el mes
           digitosMes++;
         }
-
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //disminuye el mes
           digitosMes--;
-        }
-          
+        }         
         if (digitosMes == 13) { //si el mes es 13, cambia a 01
           digitosMes = 01;
         }
-
         if (digitosMes == 255) { //si es 255, lo cambia a 12
           digitosMes = 12;
-        }
-   
-        utftGLCD.printNumI(digitosMes, medio+34+18, 160, 2,'0');          
-        
+        }   
+        utftGLCD.printNumI(digitosMes, medio+52, 160, 2,'0');        
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente digito
           utftGLCD.setColor(NEGRO);
-          utftGLCD.drawRect(medio+34+17,159,medio+34+17+33,176);
+          utftGLCD.drawRect(medio+51,159,medio+84,176);
           ponerEnHora=3;
         }
-
-        compruebaBotonCancelar(0, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        
+        compruebaBotonCancelar(0, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio        
       break; //fin caso 2
       
       case 3: //el caso 3 ajusta el año
         utftGLCD.setColor(ROSA);
-        utftGLCD.drawRect(medio+34+18+34+17, 159, medio+34+18+34+82, 176);
+        utftGLCD.drawRect(medio+103, 159, medio+168, 176);
         utftGLCD.setColor(VERDEFOSFORITO);
         utftGLCD.setFont(BigFont);
-        utftGLCD.printNumI(digitosAnio, medio+34+18+34+18, 160, 2, '0');
+        utftGLCD.printNumI(digitosAnio, medio+104, 160, 2, '0');
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //aumenta los años
           digitosAnio++;
         }
-
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //disminuye los años
           digitosAnio--;
-        }
-          
-        utftGLCD.printNumI(digitosAnio, medio+34+18+34+18, 160, 2,'0');          
-          
+        }          
+        utftGLCD.printNumI(digitosAnio, medio+104, 160, 2,'0');
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente digito
           utftGLCD.setColor(NEGRO);
-          utftGLCD.drawRect(medio+34+18+34+17, 159, medio+34+18+34+82, 176);
+          utftGLCD.drawRect(medio+103, 159, medio+168, 176);
           ponerEnHora=4;
         }
-
-        compruebaBotonCancelar(0, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        
+        compruebaBotonCancelar(0, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio        
        break; //fin caso 3
        
        case 4: //el caso 4 ajusta el día. Tiene en cuenta el mes y el año para determinar los días que tiene ese mes en concreto
@@ -533,20 +513,16 @@ void loop() {
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //aumenta el día
           digitosDia++;
         }
-
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //disminuye el día
           digitosDia--;
-        }
-        
+        }        
         char diaMes = rtc.dias_mes(digitosMes, digitosAnio); //obtiene los días del mes y año fijados
         if (digitosDia == 255) { //si el valor es 255, ajusta valor a los días obtenidos de ese mes y año
            digitosDia = diaMes;
         } else if (digitosDia > diaMes) { //si el valor es mayor que el valor de los días obtenidos, lo cambia a 1
             digitosDia = 1;
-        } 
-     
+        }      
         utftGLCD.printNumI(digitosDia, medio, 160, 2,'0'); 
- 
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, actualiza la fecha y hora
           utftGLCD.setColor(NEGRO);
           utftGLCD.drawRect(medio-1, 159, medio+33, 176);
@@ -561,60 +537,49 @@ void loop() {
             ventana=3;
           }
         }
-
-        compruebaBotonCancelar(0, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        
+        compruebaBotonCancelar(0, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio        
        break; //fin caso 4
      
     } //fin switch case ponerEnHora
-    
-
   } //fin if ventana = 1
 
   //la ventana 2 muestra y controla las dos alarmas
   if (ventana==2) {
     dibujaAjustarAlarmas(); //dibuja las alarmas
-    siguienteCancion(); 
-
+    siguienteCancion();
     //bucle para ajustar cada objeto
     switch (ponerAlarma) {
       case 0: //el caso 0 ajusta la hora de la alarma 1
         utftGLCD.setColor(ROSA);
-        utftGLCD.drawRoundRect(67,78,118+50,153);
+        utftGLCD.drawRoundRect(67,78,168,153);
         utftGLCD.setColor(VERDEFOSFORITO);
         utftGLCD.setFont(SixteenSegment48x72Num);
         utftGLCD.printNumI(alarma1Hora, 70,80,2,'0');
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //aumenta la hora de la alarma 1
           alarma1Hora++;
           utftGLCD.setColor(ROSA);
-          utftGLCD.drawRoundRect(67,78,118+50,153);
-        } 
-        
+          utftGLCD.drawRoundRect(67,78,168,153);
+        }         
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //disminuye la hora de la alarma 1
           alarma1Hora--;
           utftGLCD.setColor(ROSA);
-          utftGLCD.drawRoundRect(67,78,118+50,153);
+          utftGLCD.drawRoundRect(67,78,168,153);
         }
-
         //controla que los digitos estén comprendidos entre 00 y 23, ambos incluidos
         if (alarma1Hora == 24) {  
           alarma1Hora = 00;
         } 
-
         if (alarma1Hora == 255) {
           alarma1Hora = 23;
-        }
-        
+        }        
         utftGLCD.printNumI(alarma1Hora, 70,80,2,'0');          
         
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente digito
           utftGLCD.setColor(NEGRO);
-          utftGLCD.drawRoundRect(67,78,118+50,153);
+          utftGLCD.drawRoundRect(67,78,168,153);
           ponerAlarma = 1;
         }
-
-        compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-        
+        compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio      
       break; //fin caso 0
       
       case 1: //el caso 1 ajusta los minutos de la alarma 1
@@ -626,30 +591,23 @@ void loop() {
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //aumenta los minutos de la alarma 1
           alarma1Minutos++;
         }
-
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //disminuye los minutos de la alarma 1
           alarma1Minutos--;
         }
-
         //controla que los digitos de los minutos estén comprendidos entre 00 y 59, ambos incluidos
         if (alarma1Minutos == 60) {
           alarma1Minutos = 00;
         }
-
         if (alarma1Minutos == 255) {
           alarma1Minutos = 59;
-        }
-          
-        utftGLCD.printNumI(alarma1Minutos, 186,80,2,'0');          
-        
+        }          
+        utftGLCD.printNumI(alarma1Minutos, 186,80,2,'0');        
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //Si se pulsa aceptar, cambia al siguiente campo
           utftGLCD.setColor(NEGRO);
           utftGLCD.drawRoundRect(184,78,285,153);
           ponerAlarma=2;
         }
-
         compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-
       break; //fin caso 1
 
       case 2: //el caso 2 activa o desactiva la alarma 1
@@ -661,8 +619,7 @@ void loop() {
           alarma1OnOff = true;
           utftGLCD.fillRect(314, 90, 330, 104);
           utftGLCD.print(encendido, 336, 90);
-        }
-          
+        }          
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //si se pulsa disminuir, la desactiva
           alarma1OnOff = false;
           utftGLCD.setColor(NEGRO);
@@ -670,17 +627,13 @@ void loop() {
           utftGLCD.setColor(VERDEFOSFORITO);
           utftGLCD.drawRect(314, 90, 330, 104);
           utftGLCD.print(apagado,336, 90);
-        }
-         
+        }         
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente campo
           utftGLCD.setColor(NEGRO);
-          //utftGLCD.drawRect(312,88,384,106);
           utftGLCD.drawRect(312,88,446,106);
           ponerAlarma=3;
         }
-
         compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-
       break; //fin caso 2
       
       case 3: //el caso 3 selecciona entre el buzzer y el reproductor mp3
@@ -697,8 +650,7 @@ void loop() {
           utftGLCD.setColor(ROSA);
           utftGLCD.drawRect(357,114,383,140);
           return;
-        }
-          
+        }          
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //si se pulsa cancelar, pone la chicharra como tono de alarma
           alarma1TonoMp3 = true;
           utftGLCD.setColor(ROSA);
@@ -706,54 +658,44 @@ void loop() {
           utftGLCD.setColor(NEGRO);
           utftGLCD.drawRect(357,114,383,140);
           return;
-        }
-         
+        }         
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente digito
           utftGLCD.setColor(NEGRO);
           ponerAlarma=4;
         }
-
         compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-
       break; //fin caso 3
       
       case 4: //el caso 4 ajusta la hora de la alarma 2
         utftGLCD.setColor(ROSA);
-        utftGLCD.drawRoundRect(67,188,118+50,263);
+        utftGLCD.drawRoundRect(67,188,168,263);
         utftGLCD.setColor(VERDEFOSFORITO);
         utftGLCD.setFont(SixteenSegment48x72Num);
         utftGLCD.printNumI(alarma2Hora, 70,190,2,'0');
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //aumenta la hora de la alarma 2
           alarma2Hora++;
           utftGLCD.setColor(ROSA);
-          utftGLCD.drawRoundRect(67,188,118+50,263);
-        } 
-        
+          utftGLCD.drawRoundRect(67,188,168,263);
+        }        
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //disminuye la hora de la alarma 2
           alarma2Hora--;
           utftGLCD.setColor(ROSA);
-          utftGLCD.drawRoundRect(67,188,118+50,263);
+          utftGLCD.drawRoundRect(67,188,168,263);
         }
-
         //controla que los digitos de la hora están entre 00 y 23, ambos incluidos
         if (alarma2Hora == 24) {
           alarma2Hora = 00;
         }
-
         if (alarma2Hora == 255) {
           alarma2Hora = 23;
-        }
-        
-        utftGLCD.printNumI(alarma2Hora, 70,190,2,'0');          
-        
+        }        
+        utftGLCD.printNumI(alarma2Hora, 70,190,2,'0');        
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente digito
           utftGLCD.setColor(NEGRO);
-          utftGLCD.drawRoundRect(67,188,118+50,263);
+          utftGLCD.drawRoundRect(67,188,168,263);
           ponerAlarma = 5;
         }
-
         compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-
       break;
       
       case 5: //ajusta los minutos de la alarma 2
@@ -765,30 +707,23 @@ void loop() {
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //aumenta los minutos de la alarma 2
           alarma2Minutos++;
         }
-
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //disminuye los minutos de la alarma 2
           alarma2Minutos--;
         }
-
         //controla que los digitos están comprendidos entre 00 y 59, ambos incluidos
         if (alarma2Minutos == 60) {
           alarma2Minutos = 00;
         }
-
         if (alarma2Minutos == 255) {
           alarma2Minutos = 59;
-        }
-          
-        utftGLCD.printNumI(alarma2Minutos, 186,190,2,'0');          
-        
+        }          
+        utftGLCD.printNumI(alarma2Minutos, 186,190,2,'0');        
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente campo
           utftGLCD.setColor(NEGRO);
           utftGLCD.drawRoundRect(184,188,285,263);
           ponerAlarma=6;
         }
-
-        compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-      
+        compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio      
       break; //fin caso 5
       
       case 6: //el caso 6 activa o desactiva la alarma 2
@@ -800,8 +735,7 @@ void loop() {
           alarma2OnOff = true;
           utftGLCD.fillRect(314, 200, 330, 214);
           utftGLCD.print(encendido, 336, 200);
-        }
-          
+        }          
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //si se pulsa disminuir, desactiva la alarma 2
           alarma2OnOff = false;
           utftGLCD.setColor(NEGRO);
@@ -809,16 +743,13 @@ void loop() {
           utftGLCD.setColor(VERDEFOSFORITO);
           utftGLCD.drawRect(314, 200, 330, 214);
           utftGLCD.print(apagado, 336, 200);
-        }
-         
+        }         
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente campo
           utftGLCD.setColor(NEGRO);
           utftGLCD.drawRect(312,198,446,216);
           ponerAlarma=7;
         }
-
         compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-
       break; //fin caso 6
             
       case 7: //el caso 7 selecciona entre el tono y el mp3 para la alarma 2
@@ -834,16 +765,14 @@ void loop() {
           utftGLCD.drawRect(313,224,339,250);
           utftGLCD.setColor(ROSA);
           utftGLCD.drawRect(357,224,383,250);
-        }
-          
+        }          
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //si se pulsa disminuir, pone la chicharra como tono de la alarma 2
           alarma2TonoMp3 = true;
           utftGLCD.setColor(ROSA);
           utftGLCD.drawRect(313,224,339,250);
           utftGLCD.setColor(NEGRO);
           utftGLCD.drawRect(357,224,383,250);
-        }
-         
+        }         
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, guarda las alarmas y vuelve a la pantalla de inicio
           utftGLCD.clrScr();
           ventana=0;
@@ -851,9 +780,7 @@ void loop() {
           asignarAlarmas();
           dibujarPantallaInicio();
         }
-
         compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-
       break; //fin caso 6
       
       } //fin switch case ponerAlarma
@@ -864,15 +791,13 @@ void loop() {
     dibujaTemperatura(); //dibuja la temperatura
     dibujaRelojEnMP3(); //dibuja el reloj en el reproductor
     compruebaAlarma(); //comprueba si tiene que saltar alguna alarma
-     ventanaAlaQueVolver = 3;
-    
+     ventanaAlaQueVolver = 3;    
     if (!alarma1Coincide | !alarma2Coincide) {  //si no hay alarma que tenga que saltar o este activa
       if (estadoReproduccion == 0) { //y el estado de la reproduccion es parado
         drawTrackBar(); //dibuja la barra de reproducción
       } else {
         mostrarTiempoReproduccion(); //en caso contrario, muestra el tiempo transcurrido
-      }
-    
+      }    
       mostrarModoReproduccion(); //dibuja el modo de reproducción
       mostrarModoEcualizador(); //dibuja el modo de ecualizador
       mp3.setVolume(volumen); //asigna el volumen al reproductor
@@ -915,8 +840,7 @@ void loop() {
         ventana=0;
         dibujarPantallaInicio();
         return;
-      }
-       
+      }       
     } else {
       utftGLCD.clrScr();
       ventana = 4;
@@ -969,8 +893,7 @@ void loop() {
            }           
            siguienteCancion();
          }
-       } //fin if reproducción mp3 alarma 1
-       
+       } //fin if reproducción mp3 alarma 1       
        cancelarAlarma(1); //llama al metodo para cancelar la alarma 1
     }//fin alarma 1 coincide
 
@@ -1008,23 +931,20 @@ void loop() {
            siguienteCancion();
          }
        }//fin if reproducción mp3 alarma 2
-
        cancelarAlarma(2); //llama al método para cancelar la alarma 2
-    }//fin alarma 2 coincide
-    
+    }//fin alarma 2 coincide    
   } //fin ventana 4
-
+  
 } //fin loop
 
 //Método que comprueba si está reproduciendo. Si se acaba la canción, pone la siguiente
-void siguienteCancion() { 
-  tiempoTotal = mp3.getTotalTrackPlaybackTime();
-  delay(10);
+void siguienteCancion() {  
   tiempoTranscurrido = mp3.getElapsedTrackPlaybackTime();
   delay(10);
-
+  tiempoTotal = mp3.getTotalTrackPlaybackTime();  
+  delay(10);
   //Si la canción llega a fin, dibuja la barra a 0 y lanza la siguiente canción
-  if (tiempoTotal == tiempoTranscurrido || tiempoTranscurrido > tiempoTotal) {
+  if (tiempoTranscurrido == 0 || tiempoTranscurrido == tiempoTotal || tiempoTranscurrido > tiempoTotal) {
     if (ventana == 3) {
       drawTrackBar();
     }
@@ -1052,6 +972,9 @@ void botonesComunes() {
   //Si se pulsa el botón aumentar cambia a la siguiente canción
   if (digitalRead(AUMENTARHORACANCION)==HIGH){
     mp3.nextTrack();
+    if (ventana == 3) {
+      drawTrackBar();
+    }
     utftGLCD.setColor(AMARILLO);
     utftGLCD.setFont(Various_Symbols_32x32);
     utftGLCD.print("h", (tamanioPantallaAncho/2)-ejeX,ejeY);
@@ -1062,6 +985,9 @@ void botonesComunes() {
   //Si el pulsa el botón disminuir cambia a la canción anterior 
   if (digitalRead(DISMINUYEHORACANCION)==HIGH){
     mp3.previousTrack();
+    if (ventana == 3) {
+      drawTrackBar();
+    }    
     utftGLCD.setColor(AMARILLO);
     utftGLCD.setFont(Various_Symbols_32x32);
     utftGLCD.print("g", (tamanioPantallaAncho/2)-ejeX,ejeY);
@@ -1141,8 +1067,7 @@ void compruebaBotonCancelar(byte horaOalarma, byte ventanica) {
     dibujarPantallaInicio();
     } else if (ventanica == 3) {      
       ventana = 3;
-      drawTrackBar();
-      
+      drawTrackBar();      
     }
   }
 }
@@ -1244,15 +1169,17 @@ void mostrarModoReproduccion() {
 //Método para dibujar la barra de reproducción completa en el reproductor mp3
 void drawTrackBar() {
   utftGLCD.setColor(TURQUESA);
-  utftGLCD.fillRect (48, 100, 48 + 380, 100 + 25);
+  utftGLCD.fillRect (48, 100, 428, 125);
 }
 
 //Método para mostrar los tiempos de reproducción y el avance en la barra de reproducción
 //del reproductor mp3
 void mostrarTiempoReproduccion() {  
   tiempoTotal = mp3.getTotalTrackPlaybackTime();
-  delay(10);
+  delay(10);  
   tiempoTranscurrido = mp3.getElapsedTrackPlaybackTime();
+  delay(10);
+  tiempoTotal = mp3.getTotalTrackPlaybackTime(); //Relectura tiempototal. Corrección error dibujo barra errónea
   delay(10);
   minutos = (int)tiempoTranscurrido / 60;
   segundos = (((float)tiempoTranscurrido / 60) - minutos) * 60;
@@ -1273,14 +1200,15 @@ void mostrarTiempoReproduccion() {
   utftGLCD.printNumI((int)segundosReproducidos, 380, 48, 2, '0');
   int trackBarX = map(tiempoTranscurrido, 0, tiempoTotal, 0, 380);
   utftGLCD.setColor(ROSA);
-  utftGLCD.fillRect(48, 100, 48 + trackBarX, 100 + 25);
+  utftGLCD.fillRect(48, 100, 48 + trackBarX, 100 + 25);  
   //Si la canción llega a fin, dibuja la barra a 0 y lanza la siguiente canción
-   siguienteCancion();
-  //Si el tiempo de reproducción es 0, dibuja la barra. Es una corrección para
-  //la reproducción de 1 canción que no pintaba bien
-  if (tiempoTranscurrido == 0) {
-    drawTrackBar();
-  }
+  siguienteCancion();
+  //Si el tiempo de reproducción es 0, dibuja la barra. Es una corrección para la reproducción de 1 canción que no pintaba bien  
+  if (tiempoTranscurrido == 0 || tiempoTranscurrido == tiempoTotal || tiempoTranscurrido > tiempoTotal) {
+    if (ventana == 3) {
+      drawTrackBar();
+    }   
+  }  
 }
 
 //Este método dibuja el reloj en el reproductor mp3
@@ -1469,9 +1397,9 @@ void dibujaAjustarFechaYhora() {
   utftGLCD.setFont(BigFont);
   utftGLCD.printNumI(digitosDia, medio, 160, 2, '0');
   utftGLCD.print("/",medio+34,160);
-  utftGLCD.printNumI(digitosMes, medio+34+18, 160, 2, '0');
+  utftGLCD.printNumI(digitosMes, medio+52, 160, 2, '0');
   utftGLCD.print("/",medio+34+18+34,160);
-  utftGLCD.printNumI(digitosAnio, medio+34+18+34+18, 160);
+  utftGLCD.printNumI(digitosAnio, medio+104, 160);
 
 }
 
@@ -1609,15 +1537,13 @@ void dibujaTemperatura() {
 //Dibuja la fecha en la ventana 0
 void dibujaFecha() {
   obtenerFechaActual();
-  rtc.setDOW();
-  
+  rtc.setDOW();  
   //constantes que indican las coordenadas de las dos líneas de la fecha
   //COORDENADAS CONSTANTES X HORIZONTAL Y VERTICAL
   const int ejexlinea1 = 40;
   const int ejeylinea1 = 260;
   const int ejeylinea2 = 280;  
-  String mestexto = rtc.getMonthStr(FORMAT_LONG);
-  
+  String mestexto = rtc.getMonthStr(FORMAT_LONG);  
   utftGLCD.setColor(ROSA);
   utftGLCD.setFont(BigFont);
   utftGLCD.setBackColor(NEGRO);
@@ -1633,7 +1559,6 @@ void dibujaFecha() {
   utftGLCD.print(mestexto, ejexlinea1+((dia.length()*16)+2+(de.length()*16)+2),ejeylinea2);
   utftGLCD.print(de, ejexlinea1+((dia.length()*16)+2+(de.length()*16)+2+(mestexto.length()*16)+2),ejeylinea2);
   utftGLCD.print(anio, ejexlinea1+((dia.length()*16)+2+(de.length()*16)+2+(mestexto.length()*16)+2+(de.length()*16)+2),ejeylinea2); 
-
   digitosDia = dia.toInt();
   digitosMes = mes.toInt();
   digitosAnio = anio.toInt();  
@@ -1760,23 +1685,11 @@ void saludo() {
 }
 
 //Tono de alarma para el buzzer
-void tonoAlarma() {    
-  tone(PINCHICHARRA, 4000,2000); // Send 1KHz sound signal...
+void tonoAlarma() {      
+  tone(PINCHICHARRA, 4500,2000); 
   delay(100);
-  tone(PINCHICHARRA, 4000,2000);
-  delay(200);
-  tone(PINCHICHARRA, 4500,2000);
+  tone(PINCHICHARRA, 3000,200);
   delay(100);
-  tone(PINCHICHARRA, 4000,2000);
-  delay(200);
-  tone(PINCHICHARRA, 4500,2000);
-  delay(100);
-  tone(PINCHICHARRA, 4000,2000);
-  delay(200);
-  tone(PINCHICHARRA, 4500,2000);
-  delay(1000);        // ...for 1 sec
-  noTone(PINCHICHARRA);     // Stop sound...
-  delay(1000);        // ...for 1sec 
 }
 
 //Clase hija para obtener la parte decimal de la temperatura
