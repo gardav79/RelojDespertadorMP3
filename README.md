@@ -20,6 +20,14 @@ Enlace a github: https://github.com/gardav79/RelojDespertadorMP3
 Enlace a los STL en thinkgiverse: https://www.thingiverse.com/thing:4627107
     
 ---- Versiones --------------------------------------------------------------------------------------------------------------
+
+19/10/2020 Versión 1.3
+    
+**** Cambios introducidos v1.3 *******************
+   
+  · Relectura del valor tiempoTotal en el reproductor mp3 por un error en el pintal de la barra de progreso de mp3, 
+    que en modo aleatorio no pintaba correctamente
+  · Cambio en el tono de la chicharra, buscando un tono más corto y algo más grave
  
 18/10/2020 Versión 1.2
 
