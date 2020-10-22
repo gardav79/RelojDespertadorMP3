@@ -422,13 +422,9 @@ void loop() {
         utftGLCD.printNumI(digitosHora, 70,80,2,'0');
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //si se pulsa aumentar, sube una hora
           digitosHora++;
-          utftGLCD.setColor(ROSA);
-          utftGLCD.drawRoundRect(67,78,168,153);
         } 
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //si se pulsa disminuir, baja una hora
           digitosHora--;
-          utftGLCD.setColor(ROSA);
-          utftGLCD.drawRoundRect(67,78,168,153);
         }
         if (digitosHora == 24) { //cambia las 24h a 00
           digitosHora = 00;
