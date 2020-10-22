@@ -818,7 +818,7 @@ void loop() {
           if (mReproduccion == 3) { //Si el modo de reproducción es aleatorio
             mp3.playTrackByIndexNumber(random(1,10)); //elige una canción al azar entre la 1 y la 10            
           } else {
-            mp3.playTrackByIndexNumber(1); 
+            mp3.playTrackByIndexNumber(1);
           }
           siguienteCanc = true; //cambia la variable para que pinte bien la barra de reproducción
           mostrarTiempoReproduccion(); //y llama al método que lo pinta
