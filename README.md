@@ -21,6 +21,16 @@ Enlace a los STL en thinkgiverse: https://www.thingiverse.com/thing:4627107
     
 ---- Versiones --------------------------------------------------------------------------------------------------------------
 
+ 22/10/2020 Versión 1.4
+   
+ **** Cambios introducidos v1.4 *******************
+    
+   · Cambios en el modo de reproducción de la siguiente canción
+   · He retirado la relectura que introduje anteriormente al no ser ya necesaria
+   · Corregido problema en la barra de reproducción al cambiar de canción. Si el BY8001-16P tardaba en dar los valores de tiempo de la canción
+     la barra de reproducción no se pintaba correctamente.
+
+
 19/10/2020 Versión 1.3
     
 **** Cambios introducidos v1.3 *******************
