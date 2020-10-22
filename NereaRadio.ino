@@ -658,8 +658,7 @@ void loop() {
           utftGLCD.setColor(NEGRO);
           utftGLCD.drawRect(313,114,339,140);
           utftGLCD.setColor(ROSA);
-          utftGLCD.drawRect(357,114,383,140);
-          return;
+          utftGLCD.drawRect(357,114,383,140);         
         }          
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //si se pulsa cancelar, pone la chicharra como tono de alarma
           alarma1TonoMp3 = true;
@@ -667,7 +666,6 @@ void loop() {
           utftGLCD.drawRect(313,114,339,140);
           utftGLCD.setColor(NEGRO);
           utftGLCD.drawRect(357,114,383,140);
-          return;
         }         
         if (digitalRead(ACEPTARPLAYPAUSE)==HIGH){ //si se pulsa aceptar, cambia al siguiente digito
           utftGLCD.setColor(NEGRO);
@@ -818,9 +816,9 @@ void loop() {
           delay(500);
           utftGLCD.print(" ", (tamanioPantallaAncho/2)-32,150);
           if (mReproduccion == 3) { //Si el modo de reproducción es aleatorio
-            mp3.playTrackByIndexNumber(random(1,10)); //elige una canción al azar entre la 1 y la 10
+            mp3.playTrackByIndexNumber(random(1,10)); //elige una canción al azar entre la 1 y la 10            
           } else {
-            mp3.play(); //sino, reproduce
+            mp3.playTrackByIndexNumber(1); 
           }
           siguienteCanc = true; //cambia la variable para que pinte bien la barra de reproducción
           mostrarTiempoReproduccion(); //y llama al método que lo pinta
@@ -850,15 +848,14 @@ void loop() {
       if (digitalRead(CAMBIARARELOJ)==HIGH) {
         utftGLCD.clrScr();
         ventana=0;
-        dibujarPantallaInicio();
-        return;
+        dibujarPantallaInicio();       
       }       
     } else {
       utftGLCD.clrScr();
       ventana = 4;
-      return;
-    }
-  }
+      return;      
+    } //fin bucle alarmas no coinciden
+  } //fin ventana 3
 
   //ventana que muestra los mensajes de las alarmas
   if (ventana == 4) {    
@@ -900,7 +897,7 @@ void loop() {
              contador++;
            }
            if (estadoReproduccion == 0) { //si no está reproduciendo mp3, pone la primera canción
-             mp3.playTrackByIndexNumber(0);
+             mp3.playTrackByIndexNumber(random(1,10)); //elige una canción al azar entre la 1 y la 10            
              estadoReproduccion = 3; //indica el estado actual de reproducción mp3
            }           
            siguienteCancion();
@@ -937,7 +934,7 @@ void loop() {
              contador++;
            }
            if (estadoReproduccion == 0) { //si no está reproduciendo mp3, pone la primera canción
-             mp3.playTrackByIndexNumber(0);
+             mp3.playTrackByIndexNumber(random(1,10)); //elige una canción al azar entre la 1 y la 10            
              estadoReproduccion = 3; //indica el estado actual de reproducción mp3
            }
            siguienteCancion();
@@ -954,18 +951,19 @@ void botonesComunes() {
   (ventana==0) ? ejeY=200 : ejeY=150; //Si la ventana es la 0 (reloj) asigna ejeY = 200px, si no, ejeY = 150
   //Si se pulsa el botón stop, muestra un icono de stop en pantalla y para la reproduccion
   if (digitalRead(CANCELARSTOP)==HIGH){
-    if (estadoReproduccion == 2) {
+    if (estadoReproduccion == 2 | estadoReproduccion == 1) { //si está reproduciendo o está pausada la reproducción
       utftGLCD.setColor(AMARILLO);
       utftGLCD.setFont(Various_Symbols_32x32);
       utftGLCD.print("j", (tamanioPantallaAncho/2)-ejeX,ejeY);
       dibujadoIcono = true; 
-      mp3.stopPlayback();      
-      estadoReproduccion = 0;
+      mp3.stopPlayback();
+      estadoReproduccion = 0;            
       if (ventana == 3) {
         mostrarTiempoReproduccion();      
       }
-      return;    
+      return;      
     } 
+    estadoReproduccion = 0;
   }
   //Si se pulsa el botón aumentar cambia a la siguiente canción
   if (digitalRead(AUMENTARHORACANCION)==HIGH){
@@ -979,7 +977,6 @@ void botonesComunes() {
       mostrarTiempoReproduccion(); //y llama al método
     }    
     estadoReproduccion = 2;
-    return;
   }
   //Si el pulsa el botón disminuir cambia a la canción anterior 
   if (digitalRead(DISMINUYEHORACANCION)==HIGH){
@@ -1048,8 +1045,7 @@ void botonesComunes() {
     utftGLCD.clrScr();
     ventana = 2;      
   }
-
-  if (dibujadoIcono == true) { 
+  if (dibujadoIcono == true) { //limpiar el icono 
     delay(500);
     utftGLCD.setFont(Various_Symbols_32x32);
     utftGLCD.print(" ", (tamanioPantallaAncho/2)-ejeX,ejeY); 
@@ -1229,7 +1225,7 @@ void mostrarTiempoReproduccion() {
   utftGLCD.print(":", 98, 48);
   utftGLCD.printNumI((int)segundos, 124, 48, 2, '0');
   utftGLCD.setFont(Various_Symbols_32x32);
-  utftGLCD.print("F", 202, 52);
+  utftGLCD.print("F", 202, 56);
   utftGLCD.setFont(GroteskBold24x48);
   utftGLCD.print("-", 278, 48);
   utftGLCD.printNumI((int)minutosReproducidos, 304, 48, 2, '0');
