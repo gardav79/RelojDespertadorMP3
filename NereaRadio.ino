@@ -7,6 +7,15 @@
  *   
  *   ---- Versiones --------------------------------------------------------------------------------------------------------------
  *   
+ *   22/10/2020 Versión 1.4
+ *   
+ *   **** Cambios introducidos v1.4 *******************
+ *   
+ *   · Cambios en el modo de reproducción de la siguiente canción
+ *   · He retirado la relectura que introduje anteriormente al no ser ya necesaria
+ *   · Corregido problema en la barra de reproducción al cambiar de canción. Si el BY8001-16P tardaba en dar los valores de tiempo de la canción
+ *     la barra de reproducción no se pintaba correctamente.
+ *   
  *   19/10/2020 Versión 1.3
  *   
  *   **** Cambios introducidos v1.3 *******************
@@ -180,7 +189,7 @@
 UTFT utftGLCD(ILI9486, 38, 39, 40, 41); //Parametros para la pantalla
 SoftwareSerial mp3Serial(62, 63);  // a9, a8 rx, tx
 BY8001 mp3;  // crea una instancia de clase BY8001 y la llama 'mp3'
-DS3231  rtc(SDA, SCL);
+DS3231 rtc(SDA, SCL);
 
 //definición de los tipos de letra
 extern uint8_t SmallFont[]; //letra pequeña
@@ -235,6 +244,7 @@ bool dibujoAlarma = true; //variable para entrar en condicional de la alarma y b
 byte contador = 1; //contador en segundos de la alarma mp3
 byte volAlarm = volumenAlarma; //volumen de la alarma variable, se utiliza para ir subiendo paulatinamente el volumen
 bool tonoAlarmaReproduciendo = false; //define si se está reproduciendo una alarma, para que no se pisen ambas alarmas
+bool dibujadoIcono = false;
          
 //variable temperatura
 float temperatura; //variable para obtener la temperatura. Tipo float para las décimas
@@ -251,6 +261,7 @@ static word tiempoTotal, tiempoTranscurrido, reproduccion, minutos, segundos, la
 //variables para la hora y fecha actuales
 String relojActual, horasActuales, minutosActuales, segundosActuales, fechaActual, fecha, dia, mes, anio;
 String horasS, minutosS, segundosS, fechaS;
+bool siguienteCanc = false; //variable para determinar si se ha cambiado a la siguiente canción
 
 //Cadenas fijas para los textos
 const String encendido = "Encend.";
@@ -283,10 +294,15 @@ int length = 28; // the number of notes
 char notes[] = "GGAGcB GGAGdc GGxecBA yyecdc";
 int beats[] = {2,2,8,8,8,16,1,2,2,8,8,8,16,1,2,2,8,8,8,8,16,1,2,2,8,8,8,16};
 int tempo = 200;// time delay between note
+//Variables de cumpleaños. El día indicado sonará dos veces el tono de cumpleaños, a las dos horas indicadas
 int vueltaTonoCumpleanios = true;
-byte diaNacimiento = 11; //día de nacimiento. Si no tiene fecha actual, asigna este día
-byte mesNacimiento = 9; //mes de nacimiento. Si no tiene fecha actual, asigna este mes
-int anioNacimiento = 2011; //año de nacimiento. Si no tiene fecha actual, asigna ese año
+const byte diaNacimiento = 11; //día de nacimiento. Si no tiene fecha actual, asigna este día
+const byte mesNacimiento = 9; //mes de nacimiento. Si no tiene fecha actual, asigna este mes
+const int anioNacimiento = 2011; //año de nacimiento. Si no tiene fecha actual, asigna ese año
+const byte hora1DiaCumple = 8; //hora a la que sonará la primera vez tono cumpleaños feliz
+const byte minuto1DiaCumple = 0; //minutos a los que sonará la primera vez tono cumpleaños feliz
+const byte hora2DiaCumple = 20; //hora a la que sonará la segunda vez tono cumpleaños feliz
+const byte minuto2DiaCumple = 0; //minutos a los que sonará la segunda vez tono cumpleaños feliz
 
 void setup() {
   //Pines asignados a botones
@@ -546,7 +562,9 @@ void loop() {
   //la ventana 2 muestra y controla las dos alarmas
   if (ventana==2) {
     dibujaAjustarAlarmas(); //dibuja las alarmas
+    if (estadoReproduccion == 2) { //si está reproduciendo y se acaba la canción, pasa a la siguiente
     siguienteCancion();
+    }
     //bucle para ajustar cada objeto
     switch (ponerAlarma) {
       case 0: //el caso 0 ajusta la hora de la alarma 1
@@ -556,14 +574,10 @@ void loop() {
         utftGLCD.setFont(SixteenSegment48x72Num);
         utftGLCD.printNumI(alarma1Hora, 70,80,2,'0');
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //aumenta la hora de la alarma 1
-          alarma1Hora++;
-          utftGLCD.setColor(ROSA);
-          utftGLCD.drawRoundRect(67,78,168,153);
+          alarma1Hora++;          
         }         
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //disminuye la hora de la alarma 1
           alarma1Hora--;
-          utftGLCD.setColor(ROSA);
-          utftGLCD.drawRoundRect(67,78,168,153);
         }
         //controla que los digitos estén comprendidos entre 00 y 23, ambos incluidos
         if (alarma1Hora == 24) {  
@@ -674,14 +688,10 @@ void loop() {
         utftGLCD.printNumI(alarma2Hora, 70,190,2,'0');
         if (digitalRead(AUMENTARHORACANCION)==HIGH){ //aumenta la hora de la alarma 2
           alarma2Hora++;
-          utftGLCD.setColor(ROSA);
-          utftGLCD.drawRoundRect(67,188,168,263);
-        }        
+         }        
         if (digitalRead(DISMINUYEHORACANCION)==HIGH){ //disminuye la hora de la alarma 2
           alarma2Hora--;
-          utftGLCD.setColor(ROSA);
-          utftGLCD.drawRoundRect(67,188,168,263);
-        }
+         }
         //controla que los digitos de la hora están entre 00 y 23, ambos incluidos
         if (alarma2Hora == 24) {
           alarma2Hora = 00;
@@ -781,7 +791,7 @@ void loop() {
           dibujarPantallaInicio();
         }
         compruebaBotonCancelar(1, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio
-      break; //fin caso 6
+      break; //fin caso 6*/
       
       } //fin switch case ponerAlarma
   } //fin if ventana = 2
@@ -806,29 +816,35 @@ void loop() {
         //si no hay reproducción activa, empieza a reproducir
         if (estadoReproduccion == 0) {
           drawTrackBar();
-          mp3.playTrackByIndexNumber(1);
           utftGLCD.setColor(AMARILLO);
           utftGLCD.setFont(Various_Symbols_32x32);
           utftGLCD.print("b", (tamanioPantallaAncho/2)-32,150);
           delay(500);
-          utftGLCD.print(" ", (tamanioPantallaAncho/2)-32,150);  
+          utftGLCD.print(" ", (tamanioPantallaAncho/2)-32,150);
+          if (mReproduccion == 3) { //Si el modo de reproducción es aleatorio
+            mp3.playTrackByIndexNumber(random(1,10)); //elige una canción al azar entre la 1 y la 10
+          } else {
+            mp3.play(); //sino, reproduce
+          }
+          siguienteCanc = true; //cambia la variable para que pinte bien la barra de reproducción
+          mostrarTiempoReproduccion(); //y llama al método que lo pinta
           estadoReproduccion = 2;
           return;    
         } else if (estadoReproduccion == 2) { //si está reproduciendo, pausa la reproducción
-          mp3.pause();
           utftGLCD.setColor(AMARILLO);
           utftGLCD.setFont(Various_Symbols_32x32);
           utftGLCD.print("i", (tamanioPantallaAncho/2)-32,150);
           delay(500);
           utftGLCD.print(" ", (tamanioPantallaAncho/2)-32,150);
+          mp3.pause();          
           estadoReproduccion = 1;           
-        } else if (estadoReproduccion == 1) { //si la reproducción está pausada, vuelve a reproducir
-          mp3.play();
+        } else if (estadoReproduccion == 1) { //si la reproducción está pausada, vuelve a reproducir          
           utftGLCD.setColor(AMARILLO);
           utftGLCD.setFont(Various_Symbols_32x32);
           utftGLCD.print("b", (tamanioPantallaAncho/2)-32,150);
           delay(500);
           utftGLCD.print(" ", (tamanioPantallaAncho/2)-32,150);
+          mp3.play();
           estadoReproduccion = 2;  
         }
       }
@@ -937,62 +953,49 @@ void loop() {
   
 } //fin loop
 
-//Método que comprueba si está reproduciendo. Si se acaba la canción, pone la siguiente
-void siguienteCancion() {  
-  tiempoTranscurrido = mp3.getElapsedTrackPlaybackTime();
-  delay(10);
-  tiempoTotal = mp3.getTotalTrackPlaybackTime();  
-  delay(10);
-  //Si la canción llega a fin, dibuja la barra a 0 y lanza la siguiente canción
-  if (tiempoTranscurrido == tiempoTotal || tiempoTranscurrido > tiempoTotal) {
-    if (ventana == 3) {
-      drawTrackBar();
-    }
-    mp3.nextTrack();
-    delay(30);
-  }  
-}
-
 //Método que controla los botones comunes en las ventanas 0 y 3
 void botonesComunes() {
   (ventana==0) ? ejeY=200 : ejeY=150; //Si la ventana es la 0 (reloj) asigna ejeY = 200px, si no, ejeY = 150
   //Si se pulsa el botón stop, muestra un icono de stop en pantalla y para la reproduccion
   if (digitalRead(CANCELARSTOP)==HIGH){
     if (estadoReproduccion == 2) {
-      mp3.stopPlayback();
       utftGLCD.setColor(AMARILLO);
       utftGLCD.setFont(Various_Symbols_32x32);
       utftGLCD.print("j", (tamanioPantallaAncho/2)-ejeX,ejeY);
-      delay(500);
-      utftGLCD.print(" ", (tamanioPantallaAncho/2)-ejeX,ejeY);  
+      dibujadoIcono = true; 
+      mp3.stopPlayback();      
       estadoReproduccion = 0;
+      if (ventana == 3) {
+        mostrarTiempoReproduccion();      
+      }
       return;    
     } 
   }
   //Si se pulsa el botón aumentar cambia a la siguiente canción
   if (digitalRead(AUMENTARHORACANCION)==HIGH){
-    mp3.nextTrack();
-    if (ventana == 3) {
-      drawTrackBar();
-    }
+    mp3.nextTrack();    
     utftGLCD.setColor(AMARILLO);
     utftGLCD.setFont(Various_Symbols_32x32);
     utftGLCD.print("h", (tamanioPantallaAncho/2)-ejeX,ejeY);
-    delay(500);
-    utftGLCD.print(" ", (tamanioPantallaAncho/2)-ejeX,ejeY);
+    dibujadoIcono = true;     
+    if (ventana == 3) {     
+      siguienteCanc = true; //cambia el valor de la variable para que pinte correctamente la barra
+      mostrarTiempoReproduccion(); //y llama al método
+    }    
     estadoReproduccion = 2;
+    return;
   }
   //Si el pulsa el botón disminuir cambia a la canción anterior 
   if (digitalRead(DISMINUYEHORACANCION)==HIGH){
     mp3.previousTrack();
-    if (ventana == 3) {
-      drawTrackBar();
-    }    
     utftGLCD.setColor(AMARILLO);
     utftGLCD.setFont(Various_Symbols_32x32);
     utftGLCD.print("g", (tamanioPantallaAncho/2)-ejeX,ejeY);
-    delay(500);
-    utftGLCD.print(" ", (tamanioPantallaAncho/2)-ejeX,ejeY);
+    dibujadoIcono = true;    
+    if (ventana == 3) {      
+      siguienteCanc = true; //cambia el valor de la variable para que pinte correctamente la barra
+      mostrarTiempoReproduccion(); //y llama al método
+    }
     estadoReproduccion = 2;
   }
   //Este botón se encarga de cambiar entre los diferentes modos de ecualización
@@ -1023,12 +1026,11 @@ void botonesComunes() {
     if(volumen >= 30) { //si el valor de la variable volumen es mayor de 30, le fuerza a 30
       volumen = 30;
     }
-    mp3.setVolume(volumen);
     utftGLCD.setColor(AMARILLO);
     utftGLCD.setFont(Various_Symbols_32x32);
     utftGLCD.print("o", (tamanioPantallaAncho/2)-ejeX,ejeY);
-    delay(500);
-    utftGLCD.print(" ", (tamanioPantallaAncho/2)-ejeX,ejeY);
+    dibujadoIcono = true; 
+    mp3.setVolume(volumen);
   }
   //Botón para bajar el volumen
   if (digitalRead(BAJARVOLUMEN)==HIGH) { //si se pulsa bajar el volumen, baja el volumen 2 puntos
@@ -1036,12 +1038,11 @@ void botonesComunes() {
     if (volumen == 255 || volumen == 254) { //si el valor de la variable baja de 0 (pasaría a 255) le fuerza a 0
       volumen = 0;
     }
-    mp3.setVolume(volumen);
     utftGLCD.setColor(AMARILLO);
     utftGLCD.setFont(Various_Symbols_32x32);
     utftGLCD.print("n", (tamanioPantallaAncho/2)-ejeX,ejeY);
-    delay(500);
-    utftGLCD.print(" ", (tamanioPantallaAncho/2)-ejeX,ejeY);
+    dibujadoIcono = true; 
+    mp3.setVolume(volumen);
   } 
   if (digitalRead(AJUSTARRELOJ)==HIGH) { //si se pulsa ajustar el reloj, lanza la ventana de ajuste del reloj
     utftGLCD.clrScr();
@@ -1050,6 +1051,13 @@ void botonesComunes() {
   if (digitalRead(AJUSTARALARMA)==HIGH) { //si se pulsa ajustar alarmas, lanza la ventana de ajuste del reloj
     utftGLCD.clrScr();
     ventana = 2;      
+  }
+
+  if (dibujadoIcono == true) { 
+    delay(500);
+    utftGLCD.setFont(Various_Symbols_32x32);
+    utftGLCD.print(" ", (tamanioPantallaAncho/2)-ejeX,ejeY); 
+    dibujadoIcono = false;
   }
 }
 
@@ -1172,43 +1180,69 @@ void drawTrackBar() {
   utftGLCD.fillRect (48, 100, 428, 125);
 }
 
+//Método que comprueba si está reproduciendo. Si se acaba la canción, pone la siguiente
+void siguienteCancion() {
+  if (ventana != 3) {    
+    tiempoTotal = mp3.getTotalTrackPlaybackTime();
+    delay(20);
+    tiempoTranscurrido = mp3.getElapsedTrackPlaybackTime();
+    delay(20);
+    tiempoTotal = mp3.getTotalTrackPlaybackTime();
+    tiempoTranscurrido = mp3.getElapsedTrackPlaybackTime();
+  }  
+  //Si la canción llega a fin, dibuja la barra a 0 y lanza la siguiente canción
+  if (tiempoTranscurrido == tiempoTotal || tiempoTranscurrido > tiempoTotal) {
+    mp3.nextTrack();        
+    if (ventana == 3) {
+      drawTrackBar();
+      tiempoTranscurrido = 0;
+      siguienteCanc = true;
+    }    
+  }  
+}
+
 //Método para mostrar los tiempos de reproducción y el avance en la barra de reproducción
 //del reproductor mp3
-void mostrarTiempoReproduccion() {  
-  tiempoTotal = mp3.getTotalTrackPlaybackTime();
-  delay(10);  
-  tiempoTranscurrido = mp3.getElapsedTrackPlaybackTime();
-  delay(10);
-  tiempoTotal = mp3.getTotalTrackPlaybackTime(); //Relectura tiempototal. Corrección error dibujo barra errónea
-  delay(10);
-  minutos = (int)tiempoTranscurrido / 60;
-  segundos = (((float)tiempoTranscurrido / 60) - minutos) * 60;
-  reproduccion = tiempoTotal - tiempoTranscurrido;
-  minutosReproducidos = (int)reproduccion / 60;
-  segundosReproducidos = (((float)reproduccion / 60) - minutosReproducidos) * 60;
+void mostrarTiempoReproduccion() {
+  if (estadoReproduccion == 0) { //Si la reproducción es parada
+    minutos = 00;
+    segundos = 00;
+    reproduccion = 0;
+    minutosReproducidos = 0;
+    segundosReproducidos = 0;  
+  } else { //por el contrario, sino es así
+    tiempoTotal = mp3.getTotalTrackPlaybackTime();
+    delay(20);
+    if (siguienteCanc) {    
+      tiempoTranscurrido = 0;
+      drawTrackBar();
+      siguienteCanc = false;
+    } else {  
+      tiempoTranscurrido = mp3.getElapsedTrackPlaybackTime();
+      delay(20);
+    }  
+    minutos = (int)tiempoTranscurrido / 60;
+    segundos = (((float)tiempoTranscurrido / 60) - minutos) * 60;
+    reproduccion = tiempoTotal - tiempoTranscurrido;
+    minutosReproducidos = (int)reproduccion / 60;
+    segundosReproducidos = (((float)reproduccion / 60) - minutosReproducidos) * 60;
+  }
   utftGLCD.setFont(GroteskBold24x48);
   utftGLCD.setColor(AMARILLO);      
   utftGLCD.printNumI((int)minutos, 48, 48, 2, '0');
   utftGLCD.print(":", 98, 48);
   utftGLCD.printNumI((int)segundos, 124, 48, 2, '0');
   utftGLCD.setFont(Various_Symbols_32x32);
-  utftGLCD.print("ff", 202, 52);
+  utftGLCD.print("F", 202, 52);
   utftGLCD.setFont(GroteskBold24x48);
   utftGLCD.print("-", 278, 48);
   utftGLCD.printNumI((int)minutosReproducidos, 304, 48, 2, '0');
   utftGLCD.print(":", 354, 48);
-  utftGLCD.printNumI((int)segundosReproducidos, 380, 48, 2, '0');
+  utftGLCD.printNumI((int)segundosReproducidos, 380, 48, 2, '0');  
   int trackBarX = map(tiempoTranscurrido, 0, tiempoTotal, 0, 380);
   utftGLCD.setColor(ROSA);
-  utftGLCD.fillRect(48, 100, 48 + trackBarX, 100 + 25);  
-  //Si la canción llega a fin, dibuja la barra a 0 y lanza la siguiente canción
-  siguienteCancion();
-  //Si el tiempo de reproducción es 0, dibuja la barra. Es una corrección para la reproducción de 1 canción que no pintaba bien  
-  if (tiempoTranscurrido == 0 || tiempoTranscurrido == tiempoTotal || tiempoTranscurrido > tiempoTotal) {
-    if (ventana == 3) {
-      drawTrackBar();
-    }   
-  }  
+  utftGLCD.fillRect(48, 100, 48 + trackBarX, 100 + 25);    
+  siguienteCancion(); 
 }
 
 //Este método dibuja el reloj en el reproductor mp3
@@ -1310,22 +1344,18 @@ void compruebaAlarma() {
       ventana = 4;     
     }
   }
-  obtenerFechaActual();
+  obtenerFechaActual();  
   //en caso de ser la fecha de cumpleaños de Nerea, toca el tono de cumpleaños mientras no se esté reproduciendo nada
   //11.09 del año que sea, a las 08:00
-  if (dia.toInt() == 11 & mes.toInt() == 9 & horasActuales.toInt() == 8 & minutosActuales.toInt() == 0 & tonoAlarmaReproduciendo == false) {
-    tonoAlarmaReproduciendo = true;
-    tonoCumpleanios();    
+  if (dia.toInt() == diaNacimiento & mes.toInt() == mesNacimiento & 
+    (horasActuales.toInt() == hora1DiaCumple & minutosActuales.toInt() == minuto1DiaCumple | 
+     horasActuales.toInt() == hora2DiaCumple & minutosActuales.toInt() == minuto2DiaCumple) 
+     & tonoAlarmaReproduciendo == false) {
+      tonoAlarmaReproduciendo = true;
+      tonoCumpleanios();    
   } else {    
     vueltaTonoCumpleanios = true;
-  } 
-  //y lo vuelve a tocar el mismo día a las 20;00
-  if (dia.toInt() == 11 & mes.toInt() == 9 & horasActuales.toInt() == 20 & minutosActuales.toInt() == 0 & tonoAlarmaReproduciendo == false) {
-    tonoAlarmaReproduciendo = true;
-    tonoCumpleanios();    
-  } else {    
-    vueltaTonoCumpleanios = true;
-  } 
+  }   
 }
 
 //Este método es para reproducir la melodia de cumpleaños
@@ -1423,7 +1453,7 @@ void dibujaAjustarAlarmas() {
   utftGLCD.printNumI(alarma2Minutos, 186, 190, 2, '0');
   utftGLCD.setColor(VERDEFOSFORITO);
   utftGLCD.setFont(BigFont);
-  //iconos y texto alarma 1
+  //iconos y texto alarma 1  
   if (alarma1OnOff) {
     utftGLCD.fillRect(314, 90, 330, 104);
     utftGLCD.print(encendido, 336, 90);
