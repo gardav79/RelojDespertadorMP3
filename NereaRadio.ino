@@ -7,6 +7,12 @@
  *   
  *   ---- Versiones --------------------------------------------------------------------------------------------------------------
  *   
+ *   24/10/2020 Versión 1.5
+ *   
+ *   **** Cambios introducidos v1.5 *******************
+ *   
+ *   · Corrección menor del problema de la barra de reproducción
+ *   
  *   22/10/2020 Versión 1.4
  *   
  *   **** Cambios introducidos v1.4 *******************
@@ -289,11 +295,12 @@ const String modoReproduccion[] = {"Todas      ", "Carpeta    ",
 	                                 "Desactivado"};
 
 //variables referentes a tonos, melodia y fecha cumpleaños
-int freq = 50;      // Starting frequency
-int length = 28; // the number of notes
+int freq = 50;      // Frecuencia inicial
+int length = 28; // Número de notas
 char notes[] = "GGAGcB GGAGdc GGxecBA yyecdc";
 int beats[] = {2,2,8,8,8,16,1,2,2,8,8,8,16,1,2,2,8,8,8,8,16,1,2,2,8,8,8,16};
-int tempo = 200;// time delay between note
+int tempo = 200;// Retraso en ms entre notas
+
 //Variables de cumpleaños. El día indicado sonará dos veces el tono de cumpleaños, a las dos horas indicadas
 int vueltaTonoCumpleanios = true;
 const byte diaNacimiento = 11; //día de nacimiento. Si no tiene fecha actual, asigna este día
@@ -514,9 +521,9 @@ void loop() {
           ponerEnHora=4;
         }
         compruebaBotonCancelar(0, ventanaAlaQueVolver); //si se pulsa cancelar, vuelve a la pantalla de inicio        
-       break; //fin caso 3
+      break; //fin caso 3
        
-       case 4: //el caso 4 ajusta el día. Tiene en cuenta el mes y el año para determinar los días que tiene ese mes en concreto
+      case 4: //el caso 4 ajusta el día. Tiene en cuenta el mes y el año para determinar los días que tiene ese mes en concreto
         utftGLCD.setColor(ROSA);
         utftGLCD.drawRect(medio-1, 159, medio+33, 176);
         utftGLCD.setColor(VERDEFOSFORITO);
@@ -958,8 +965,8 @@ void botonesComunes() {
       dibujadoIcono = true; 
       mp3.stopPlayback();
       estadoReproduccion = 0;            
-      if (ventana == 3) {
-        mostrarTiempoReproduccion();      
+      if (ventana == 3) { //Si está en la ventana del reproductor
+        mostrarTiempoReproduccion(); //cambia los tiempos a 0
       }
       return;      
     } 
@@ -1056,16 +1063,16 @@ void botonesComunes() {
 //A este método se le llama al ajustar la hora o la alarma. Si se le pasa 0, está ajustando la hora. Si se le pasa 1, está ajustando las alarmas
 void compruebaBotonCancelar(byte horaOalarma, byte ventanica) {
   if (digitalRead(CANCELARSTOP)==HIGH){ //si se pulsa cancelar, vuelve a la pantalla de inicio
-    if (horaOalarma == 0) {
-      ponerEnHora=0;
-    } else if (horaOalarma == 1) {
-      ponerAlarma=0;
+    if (horaOalarma == 0) { //si está en la ventana de ajustar la hora y fecha
+      ponerEnHora=0; //inicializa la variable
+    } else if (horaOalarma == 1) { //si está en la ventana de ajustar las alarmas
+      ponerAlarma=0; //inicaliza la variable
     }
     utftGLCD.clrScr();
-    if (ventanica == 0) {
+    if (ventanica == 0) { //volver a la ventana principal
     ventana=0;
     dibujarPantallaInicio();
-    } else if (ventanica == 3) {      
+    } else if (ventanica == 3) { //volver a la ventana del reproductor
       ventana = 3;
       drawTrackBar();      
     }
@@ -1183,11 +1190,15 @@ void siguienteCancion() {
     tiempoTranscurrido = mp3.getElapsedTrackPlaybackTime();
   }  
   //Si la canción llega a fin, dibuja la barra a 0 y lanza la siguiente canción
-  if (tiempoTranscurrido == tiempoTotal || tiempoTranscurrido > tiempoTotal) {
+  if ((estadoReproduccion == 2 & ventana == 3 & ((int)minutosReproducidos == 0 & (int)segundosReproducidos <= 1)) | 
+      tiempoTranscurrido == tiempoTotal | 
+      tiempoTranscurrido > tiempoTotal) {
     mp3.nextTrack();        
     if (ventana == 3) {
       drawTrackBar();
       tiempoTranscurrido = 0;
+      minutosReproducidos = 0;
+      segundosReproducidos = 0;
       siguienteCanc = true;
     }    
   }  
@@ -1217,7 +1228,7 @@ void mostrarTiempoReproduccion() {
     segundos = (((float)tiempoTranscurrido / 60) - minutos) * 60;
     reproduccion = tiempoTotal - tiempoTranscurrido;
     minutosReproducidos = (int)reproduccion / 60;
-    segundosReproducidos = (((float)reproduccion / 60) - minutosReproducidos) * 60;
+    segundosReproducidos = (((float)reproduccion / 60) - minutosReproducidos) * 60;    
   }
   utftGLCD.setFont(GroteskBold24x48);
   utftGLCD.setColor(AMARILLO);      
@@ -1338,11 +1349,11 @@ void compruebaAlarma() {
   }
   obtenerFechaActual();  
   //en caso de ser la fecha de cumpleaños de Nerea, toca el tono de cumpleaños mientras no se esté reproduciendo nada
-  //11.09 del año que sea, a las 08:00
+  //11.09 del año que sea, a las 08:00 y a las 20:00
   if (dia.toInt() == diaNacimiento & mes.toInt() == mesNacimiento & 
-    (horasActuales.toInt() == hora1DiaCumple & minutosActuales.toInt() == minuto1DiaCumple | 
-     horasActuales.toInt() == hora2DiaCumple & minutosActuales.toInt() == minuto2DiaCumple) 
-     & tonoAlarmaReproduciendo == false) {
+      (horasActuales.toInt() == hora1DiaCumple & minutosActuales.toInt() == minuto1DiaCumple | 
+       horasActuales.toInt() == hora2DiaCumple & minutosActuales.toInt() == minuto2DiaCumple) 
+       & tonoAlarmaReproduciendo == false) {
       tonoAlarmaReproduciendo = true;
       tonoCumpleanios();    
   } else {    
