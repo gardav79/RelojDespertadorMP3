@@ -21,6 +21,12 @@ Enlace a los STL en thinkgiverse: https://www.thingiverse.com/thing:4627107
     
 ---- Versiones --------------------------------------------------------------------------------------------------------------
 
+24/10/2020 Versión 1.5
+   
+**** Cambios introducidos v1.5 *******************
+   
+   · Corrección menor del problema de la barra de reproducción
+
  22/10/2020 Versión 1.4
    
  **** Cambios introducidos v1.4 *******************
