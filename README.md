@@ -170,16 +170,11 @@ En el que que se explica como usar hacer que suenen diferentes frecuencias a tra
  (devuelve 0) de manera que no es posible conocer por ejemplo:
  
    -. No funciona el avance rápido, no responde
-   
    -. No funciona el retroceso rápido, no funciona
-   
    -. Identificar el número de cancióne la SD no funciona, siempre devuelve 0
-   
    -. Cambiar entre carpetas. Cambia entre carpetas (anterior o posterior) pero inicia la reproducción si está parada
-   
    -. Reproducir canción por número de canción. Listas de reproducción combinadas terminal si se envía una secuencia de 
       comandos antes de que la reproducción termine.
-      
    -. Número de canciones en la carpeta actual. Siempre devuelve 0
        
  Debido a estos problemas, no es posible identificar la canción que se está reproduciendo, poder indicar el total de canciones de 
