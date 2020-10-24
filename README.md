@@ -163,3 +163,28 @@ En el que que se explica como usar hacer que suenen diferentes frecuencias a tra
   -. 12 pulsadores
   
   -. 12 resistencias de 10k
+  
+ -------------------------------------------- Problemas conocidos ----------------------------------------------------------------
+    
+ El reproductor BY8001-16P en su versión de firmware 1.0 tiene un problema con varios métodos en los que no devuelve valor correcto 
+ (devuelve 0) de manera que no es posible conocer por ejemplo:
+   -. No funciona el avance rápido, no responde
+   -. No funciona el retroceso rápido, no funciona
+   -. Identificar el número de cancióne la SD no funciona, siempre devuelve 0
+   -. Cambiar entre carpetas. Cambia entre carpetas (anterior o posterior) pero inicia la reproducción si está parada
+   -. Reproducir canción por número de canción. Listas de reproducción combinadas terminal si se envía una secuencia de 
+      comandos antes de que la reproducción termine. 
+   -. Número de canciones en la carpeta actual. Siempre devuelve 0
+    
+ Debido a estos problemas, no es posible identificar la canción que se está reproduciendo, poder indicar el total de canciones de 
+ la carpeta actual, poder implementar un avance o retroceso de la canción o pensar en implementar cambio entre carpetas limitando 
+ bastante las posibidades del reproductor. 
+ Por otro lado, el nombre de canciones se muestra en formato fat32 por lo que limita y afea mostrar el nombre de la canción. 
+    
+ ------------------------------------------- Alimentación conjunto ----------------------------------------------------------------
+    
+ Para el proyecto estoy alimentando todo el conjunto mediante el puerto USB de 5V tipo B. Contando la caída de voltaje el conjunto 
+ realmente se está alimetando con un voltaje de 4.2v. Estoy usando un alimentador de 5v 2A como fuente de alimentación.
+   
+ Si que es necesario que el amperaje del alimentador sea de al menos 2A, dado que aunque un voltaje bajo no afecta al funcionamiento
+ si que he encontrado problemas con una amperaje inferior a 1A.
