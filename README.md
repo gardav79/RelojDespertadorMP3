@@ -187,7 +187,7 @@ En el que que se explica como usar hacer que suenen diferentes frecuencias a tra
  bastante las posibidades del reproductor. 
  Por otro lado, el nombre de canciones se muestra en formato fat32 por lo que limita y afea mostrar el nombre de la canción. 
     
- ------------------------------------------- Alimentación conjunto ----------------------------------------------------------------
+ ------------------------------------------- Alimentación de todo el conjunto ----------------------------------------------------
     
  Para el proyecto estoy alimentando todo el conjunto mediante el puerto USB de 5V tipo B. Contando la caída de voltaje el conjunto 
  realmente se está alimetando con un voltaje de 4.2v. Estoy usando un alimentador de 5v 2A como fuente de alimentación.
